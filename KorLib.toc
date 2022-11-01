@@ -7,3 +7,6 @@
 ## Version: 0.0.1
 ## Author: Donovan van Heerden
 ## SavedVariables: KorDB
+
+Core\Libs.xml
+Core\Load.xml

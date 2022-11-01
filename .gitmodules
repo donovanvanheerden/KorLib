@@ -1,0 +1,3 @@
+[submodule "WoWApi"]
+	path = WoWApi
+	url = https://github.com/Ellypse/IntelliJ-IDEA-Lua-IDE-WoW-API

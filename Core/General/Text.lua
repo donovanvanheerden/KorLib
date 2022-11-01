@@ -1,1 +1,1 @@
-print("output: text lua")
+-- This should modify text across the entire interface

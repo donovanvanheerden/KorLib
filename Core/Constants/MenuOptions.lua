@@ -1,5 +1,27 @@
 local K = KorLib
 
+local general = {
+    type = "group",
+    name = "General",
+    args = {
+        heading0 = {
+            type = "header",
+            name = "Text Options",
+            order = 0,
+        },
+        font = {
+            type = "select",
+            name = "Font",
+            desc = "Set font to use for all interface elements.",
+            values = K.Shared:HashTable("font"),
+            dialogControl = "LSM30_Font",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 1
+        }
+    }
+}
+
 local unitFrames = {
     type = "group",
     name = "Unit Frames",
@@ -121,6 +143,7 @@ local addonOptions = {
     handler = K,
     type = "group",
     args = {
+        general = general,
         unitFrames = unitFrames,
     }
 }

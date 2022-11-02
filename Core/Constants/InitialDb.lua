@@ -2,6 +2,10 @@ local K = KorLib
 
 local defaultDb = {
     profile = {
+        general = {
+            font = "Friz Quadrata TT",
+            fontSize = 12
+        },
         unitFrames = {
 			player = false,
 			target = false,

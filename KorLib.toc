@@ -11,4 +11,7 @@
 ## X-Version: 0.0.1
 
 Core\Libs.xml
+
+KorLib.lua
+
 Core\Load.xml

@@ -1,0 +1,4 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui">
+    <Script file="StatusBar.lua" />
+    <Script file="Textures.lua" />
+</Ui>

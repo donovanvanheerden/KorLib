@@ -27,22 +27,3 @@ function K:SlashCommand(input)
 		AceConfigDialog:Open(self.name)
 	end
 end
-
-function K:GetUnitFrameOption(info)
-	local key = info[#info]
-
-	return self.db.profile.unitFrames[key]
-end
-
-function K:SetUnitFrameOption(info, value)
-	local key = info[#info] -- #info = gets index for value
-
-	self.db.profile.unitFrames[key] = value
-
-	-- if key == "customTextures" then
-	-- 	self:ApplyBarTextures()
-	-- 	self:RecolourUnitFrames()
-	-- else
-	-- 	self:RecolourUnitFrame(key, value)
-	-- end
-end

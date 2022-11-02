@@ -15,12 +15,16 @@ K.wowpatch, K.wowbuild, K.wowdate, K.wowtoc = GetBuildInfo()
 K.locale = GetLocale()
 K._Defaults = {}
 
+K.Shared = _G.LibStub("LibSharedMedia-3.0")
 
 _G.KorLib = K
 
 function K:OnEnable()
 	self:Print("v" .. self.version)
 	self:Print("Enabled")
+
+    self:ApplyStatusBarColors()
+    self:ApplyFont()
 end
 
 function K:OnInitialize()
@@ -37,6 +41,8 @@ function K:OnInitialize()
 
     self:RegisterEvents()
     self:RegisterCommands()
+end
 
-    self:ApplyStatusBarColors()
+function K:OnDisable()
+	self:Print("Disabled")
 end

@@ -18,6 +18,22 @@ local general = {
             get = "GetGeneralOption",
             set = "SetGeneralOption",
             order = 1
+        },
+        header = {
+            type = "header",
+            name = "Chat Options",
+            order = 2,
+        },
+        fontSize = {
+            type = "range",
+            name = "Font Size",
+            desc = "Set size for Chat",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 3,
+            min = 8,
+            max = 24,
+            step = 1,
         }
     }
 }
@@ -47,21 +63,21 @@ local unitFrames = {
             set = "SetUnitFrameOption",
             order = 2
         },
-        targetReputation = {
-            type = "toggle",
-            name = "Target Name Background",
-            desc = "Enables class / unit colors on name background",
-            get = "GetUnitFrameOption",
-            set = "SetUnitFrameOption",
-            order = 3
-        },
+        -- targetReputation = {
+        --     type = "toggle",
+        --     name = "Target Name Background",
+        --     desc = "Enables class / unit colors on name background",
+        --     get = "GetUnitFrameOption",
+        --     set = "SetUnitFrameOption",
+        --     order = 3
+        -- },
         playertargettarget = {
             type = "toggle",
             name = "Target of Target",
             desc = "Enables class / unit colors on health bar",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
-            order = 4
+            order = 5
         },
         focus = {
             type = "toggle",
@@ -69,16 +85,16 @@ local unitFrames = {
             desc = "Enables class / unit colors on health bar",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
-            order = 5
+            order = 4
         },
-        focusReputation = {
-            type = "toggle",
-            name = "Focus Name Background",
-            desc = "Enables class / unit colors on name background",
-            get = "GetUnitFrameOption",
-            set = "SetUnitFrameOption",
-            order = 6
-        },
+        -- focusReputation = {
+        --     type = "toggle",
+        --     name = "Focus Name Background",
+        --     desc = "Enables class / unit colors on name background",
+        --     get = "GetUnitFrameOption",
+        --     set = "SetUnitFrameOption",
+        --     order = 6
+        -- },
         -- heading1 = {
         --     type = "header",
         --     name = "Power Colors",

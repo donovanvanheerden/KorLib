@@ -3,7 +3,7 @@ local K = KorLib
 local defaultDb = {
     profile = {
         general = {
-            font = "Friz Quadrata TT",
+            font = "2002",
             fontSize = 12
         },
         unitFrames = {

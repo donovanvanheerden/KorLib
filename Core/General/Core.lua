@@ -7,6 +7,7 @@ local AceDbOptions = _G.LibStub("AceDBOptions-3.0")
 function K:RegisterEvents()
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
+	self:RegisterEvent("PLAYER_LOGIN")
 end
 
 function K:RegisterCommands()

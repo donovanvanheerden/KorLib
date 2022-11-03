@@ -8,8 +8,6 @@
 ## Author: Donovan van Heerden
 ## SavedVariables: KorDB
 
-## X-Version: 0.0.1
-
 Core\Libs.xml
 
 KorLib.lua

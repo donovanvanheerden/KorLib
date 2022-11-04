@@ -1,0 +1,16 @@
+## Interface: 100000
+
+## Title: TMT - The Missing Tidbits
+## Notes: A minor UI customisation addon, defaults that should be baked in.
+
+## Version: 0.0.1
+## Author: DocMad
+## SavedVariables: TMTDB
+
+## X-Database: TMTDB
+
+Core\Libs.xml
+
+TMT.lua
+
+Core\Load.xml

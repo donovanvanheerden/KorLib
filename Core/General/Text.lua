@@ -1,27 +1,20 @@
 local K = KorLib
 
-local function SetFont(obj, font, size, style, sr, sg, sb, sa, sox, soy, r, g, b)
+-- roman: Fonts\ARIALN.TFF
+-- korean: Fonts\2002.TFF
+-- simplifiedchinese: Fonts\ARHei.TFF
+-- traditionalchinese: Fonts\arheiuhk.TFF
+-- russian: Fonts\ARIALN.TFF
+
+-- Sets the FontObject font, size and style
+---@param obj FontInstance
+---@param font string
+---@param size number
+---@param style string @ None, OUTLINE, MONOCHROME, THICKOUTLINE, MONOCHROME|OUTLINE, MONOCHROME|THICKOUTLINE 
+local function SetFont(obj, font, size, style)
 	if not obj then return end
 
 	obj:SetFont(font, size, style)
-
-	if sr and sg and sb then
-		obj:SetShadowColor(sr, sg, sb, sa)
-	end
-
-	if sox and soy then
-		obj:SetShadowOffset(sox, soy)
-	end
-
-	if r and g and b then
-		obj:SetTextColor(r, g, b)
-	elseif r then
-		obj:SetAlpha(r)
-	end
-end
-
-function K:PLAYER_LOGIN()
-    self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
 end
 
 function K:FontSizeChanged(dropDown, chatFrame, fontSize)
@@ -48,17 +41,43 @@ function K:SetGeneralOption(info, value)
 
     self.db.profile.general[key] = value
 
+    if (key == "chatFont" or key == "damageFont") and value then
+        self:ApplyFont()
+    elseif key == "font" and (self.db.profile.general.chatFont or self.db.profile.general.damageFont) then
+        self:ApplyFont()
+    end
+end
+
+function K:ApplyFontToAll()
+    self.db.profile.general.appliedToAll = true
+    self.db.profile.general.chatFont = true;
+    self.db.profile.general.damageFont = true
+
     self:ApplyFont()
 end
 
 function K:ApplyFont()
-    local font = self.Shared:Fetch('font', self.db.profile.general.font)
+    ---@type string
+    local _defaultFont = self.Shared:Fetch('font', self._Defaults.InitialDb.profile.general.font);
+
+    local profileFont, font, chatFont, damageFont = self.Shared:Fetch('font', self.db.profile.general.font)
+
+    if self.db.profile.general.appliedToAll then font = profileFont else font = _defaultFont end
+    if self.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
+    if self.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
+
+    --print('damageFont: ', self.db.profile.general.damageFont)
+    --print('using dmg font: ' .. damageFont)
+
+    --print('before set: ', DAMAGE_TEXT_FONT)
 
     _G.STANDARD_TEXT_FONT          = font
     _G.UNIT_NAME_FONT              = font
-    _G.DAMAGE_TEXT_FONT            = font
+    _G.DAMAGE_TEXT_FONT            = damageFont
     _G.NAMEPLATE_FONT              = font
     _G.NAMEPLATE_SPELLCAST_FONT    = font
+
+    --print(DAMAGE_TEXT_FONT, _G.DAMAGE_TEXT_FONT)
 
     local ForcedFontSize = {10, 14, 20, 64, 64}
 
@@ -186,13 +205,52 @@ function K:ApplyFont()
 
     for i = 1, 50 do
         if _G["ChatFrame" .. i] then
-            local _, oldSize, oldStyle  = _G["ChatFrame" .. i]:GetFont()
-
+            local oldFont, oldSize, oldStyle  = _G["ChatFrame" .. i]:GetFont()
             local fontSize = self.db.profile.general.fontSize or ForcedFontSize[i] or oldSize
 
-            SetFont(_G["ChatFrame" .. i], font, fontSize, oldStyle)
+            SetFont(_G["ChatFrame" .. i], chatFont, fontSize, oldStyle)
         end
     end
 
     BlizFontObjects = nil
+end
+
+
+
+
+do -- LSM Font Preloader ~Simpy
+	local preloader = CreateFrame('Frame')
+	preloader:SetPoint('TOP', UIParent, 'BOTTOM', 0, -500)
+	preloader:SetSize(100, 100)
+
+	local cacheFont = function(key, data)
+		local loadFont = preloader:CreateFontString()
+		loadFont:SetAllPoints()
+
+		if pcall(loadFont.SetFont, loadFont, data, 14) then
+			pcall(loadFont.SetText, loadFont, 'cache')
+		end
+	end
+
+	-- Lets load all the fonts in LSM to prevent fonts not being ready
+	local sharedFonts = K.Shared:HashTable('font')
+	for key, data in next, sharedFonts do
+		cacheFont(key, data)
+	end
+
+	-- this helps fix most of the issues with fonts or textures reverting to default because the addon providing them is loading after ElvUI
+	local callMedia = function() K:ApplyFont() end
+
+	-- Now lets hook it so we can preload any other AddOns add to LSM
+	hooksecurefunc(K.Shared, 'Register', function(_, mediaType, key, data)
+		if not mediaType or type(mediaType) ~= 'string' then return end
+
+		local mtype = mediaType:lower()
+		if mtype == 'font' then
+			cacheFont(key, data)
+			callMedia(mtype)
+		elseif mtype == 'background' or mtype == 'statusbar' then
+			callMedia(mtype)
+		end
+	end)
 end

@@ -26,14 +26,12 @@ function K:SetUnitFrameOption(info, value)
 
 	self.db.profile.unitFrames[key] = value
 
-	-- if key == "customTextures" then
-	-- 	self:ApplyBarTextures()
-	-- 	self:RecolourUnitFrames()
-	-- else
-	-- 	self:RecolourUnitFrame(key, value)
-	-- end
+	self:ApplyStatusBarColor(key, value)
 end
 
+--- Applies class color or unit color to selected status bar / unit frame element
+---@param unitFrame string @ player, target, targetReputation, focus, focusReputation, playertargettarget, alternateManaPower
+---@param enabled boolean
 function K:ApplyStatusBarColor(unitFrame, enabled)
     K:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
 

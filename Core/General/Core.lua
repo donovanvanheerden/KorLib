@@ -8,6 +8,7 @@ function K:RegisterEvents()
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
 	self:RegisterEvent("PLAYER_LOGIN")
+	self:RegisterEvent("ADDON_LOADED")
 end
 
 function K:RegisterCommands()
@@ -22,9 +23,27 @@ function K:SlashCommand(input)
 	end
 
 	if input == "debug" then
-		self.debug = not self.debug
-		self:Print("Debug: " .. (self.debug and "on" or "off"))
+		self.db.debug = not self.db.debug
+		self:Print("debug: " .. (self.db.debug and "on" or "off"))
 	elseif input:trim() == "" then
 		AceConfigDialog:Open(self.name)
 	end
+end
+
+function K:PLAYER_LOGIN()
+	print('E - PLAYER_LOGIN')
+    self:ApplyFont()
+    self:ApplyStatusBarColors()
+
+    self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
+end
+
+function K:ADDON_LOADED()
+	print('E - ADDON_LOADED')
+
+    self:ApplyFont()
+end
+
+function K:OnEvent(event)
+	print('E - '..event)
 end

@@ -2,7 +2,7 @@
 local K = KorLib
 
 function K:Log(...)
-    if (not self.db.debug) then return end
+    if (self.db == nil or not self.db.debug) then return end
 
     self:Print(...)
 end

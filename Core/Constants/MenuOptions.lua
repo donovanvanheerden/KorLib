@@ -27,7 +27,7 @@ local general = {
         applyToAll = {
             type = "execute",
             name = "Apply to all",
-            desc = "Applies the font to use for all interface elements.",
+            desc = "Applies the font to use for all interface elements. |cffff0000This will require a logout and login for damage numbers to change.",
             func = function()
                 K:ApplyFontToAll()
             end,
@@ -51,7 +51,7 @@ local general = {
         damageFont = {
             type = "toggle",
             name = "Damage Font",
-            desc = "Applies font to damage numbers",
+            desc = "Applies font to damage numbers |cffff0000This will require a logout and login for damage fonts to change.",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
             order = 6,

@@ -27,7 +27,13 @@ function K:FontSizeChanged(dropDown, chatFrame, fontSize)
 
     self.db.profile.general.fontSize = fontSize
 
-    SetFont(chatFrame:GetFontObject(), font, fontSize, oldStyle)
+    for i = 1, 50 do
+        if _G["ChatFrame" .. i] then
+            local oldFont, oldSize, oldStyle  = _G["ChatFrame" .. i]:GetFont()
+
+            SetFont(_G["ChatFrame" .. i], font, fontSize, oldStyle)
+        end
+    end
 end
 
 function K:GetGeneralOption(info)
@@ -41,10 +47,16 @@ function K:SetGeneralOption(info, value)
 
     self.db.profile.general[key] = value
 
-    if (key == "chatFont" or key == "damageFont") and value then
+    if (key == 'font' and self.db.profile.general.appliedToAll) then
+        self.db.profile.general.appliedToAll = false
+    end
+
+    if (key == "chatFont" or key == "damageFont") then
         self:ApplyFont()
     elseif key == "font" and (self.db.profile.general.chatFont or self.db.profile.general.damageFont) then
         self:ApplyFont()
+    elseif key == 'fontSize' then
+        self:FontSizeChanged(nil, nil, value)
     end
 end
 
@@ -66,18 +78,11 @@ function K:ApplyFont()
     if self.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
     if self.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
 
-    --print('damageFont: ', self.db.profile.general.damageFont)
-    --print('using dmg font: ' .. damageFont)
-
-    --print('before set: ', DAMAGE_TEXT_FONT)
-
     _G.STANDARD_TEXT_FONT          = font
     _G.UNIT_NAME_FONT              = font
     _G.DAMAGE_TEXT_FONT            = damageFont
     _G.NAMEPLATE_FONT              = font
     _G.NAMEPLATE_SPELLCAST_FONT    = font
-
-    --print(DAMAGE_TEXT_FONT, _G.DAMAGE_TEXT_FONT)
 
     local ForcedFontSize = {10, 14, 20, 64, 64}
 
@@ -216,41 +221,32 @@ function K:ApplyFont()
 end
 
 
+do -- scoped precaching for fonts
+    local assetLoader = CreateFrame('Frame')
 
+    local preloadFont = function(font)
+        local fontString = assetLoader:CreateFontString()
+        fontString:SetAllPoints()
 
-do -- LSM Font Preloader ~Simpy
-	local preloader = CreateFrame('Frame')
-	preloader:SetPoint('TOP', UIParent, 'BOTTOM', 0, -500)
-	preloader:SetSize(100, 100)
+        if pcall(fontString.SetFont, fontString, 14) then
+            pcall(fontString.SetText, fontString, 'cache')
+        end
+    end
 
-	local cacheFont = function(key, data)
-		local loadFont = preloader:CreateFontString()
-		loadFont:SetAllPoints()
-
-		if pcall(loadFont.SetFont, loadFont, data, 14) then
-			pcall(loadFont.SetText, loadFont, 'cache')
-		end
-	end
-
-	-- Lets load all the fonts in LSM to prevent fonts not being ready
 	local sharedFonts = K.Shared:HashTable('font')
-	for key, data in next, sharedFonts do
-		cacheFont(key, data)
+
+	for _, fontPath in next, sharedFonts do
+		preloadFont(fontPath)
 	end
 
-	-- this helps fix most of the issues with fonts or textures reverting to default because the addon providing them is loading after ElvUI
-	local callMedia = function() K:ApplyFont() end
+	local applyFonts = function() K:ApplyFont() end
 
-	-- Now lets hook it so we can preload any other AddOns add to LSM
-	hooksecurefunc(K.Shared, 'Register', function(_, mediaType, key, data)
-		if not mediaType or type(mediaType) ~= 'string' then return end
+	hooksecurefunc(K.Shared, 'Register', function(_, mediaType, _, data)
+		if not mediaType or type(mediaType) ~= 'string' then return else mediaType = mediaType:lower() end
 
-		local mtype = mediaType:lower()
-		if mtype == 'font' then
-			cacheFont(key, data)
-			callMedia(mtype)
-		elseif mtype == 'background' or mtype == 'statusbar' then
-			callMedia(mtype)
+		if mediaType == 'font' then
+			preloadFont(data)
+			applyFonts()
 		end
 	end)
 end

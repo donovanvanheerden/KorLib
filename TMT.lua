@@ -24,8 +24,6 @@ K.Shared:Register("font", "Expressway", [[Interface\AddOns\TMT\Fonts\Expressway.
 _G.KorLib = K
 
 function K:OnEnable()
-    print('E - OnEnable')
-
 	self:Print("v" .. self.version)
 	self:Print("Enabled")
 
@@ -35,8 +33,6 @@ function K:OnEnable()
 end
 
 function K:OnInitialize()
-    print('E - OnInitialize')
-
     self.db = _G.LibStub("AceDB-3.0"):New(self.dbName, self._Defaults.InitialDb, true)
 
     AceConfig:RegisterOptionsTable(self.name, self.Options)

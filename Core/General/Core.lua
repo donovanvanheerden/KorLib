@@ -31,7 +31,6 @@ function K:SlashCommand(input)
 end
 
 function K:PLAYER_LOGIN()
-	print('E - PLAYER_LOGIN')
     self:ApplyFont()
     self:ApplyStatusBarColors()
 
@@ -39,11 +38,5 @@ function K:PLAYER_LOGIN()
 end
 
 function K:ADDON_LOADED()
-	print('E - ADDON_LOADED')
-
     self:ApplyFont()
-end
-
-function K:OnEvent(event)
-	print('E - '..event)
 end

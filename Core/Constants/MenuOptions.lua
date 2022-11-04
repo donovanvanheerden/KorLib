@@ -12,17 +12,61 @@ local general = {
         font = {
             type = "select",
             name = "Font",
-            desc = "Set font to use for all interface elements.",
             values = K.Shared:HashTable("font"),
             dialogControl = "LSM30_Font",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
             order = 1
         },
+        separator01 = {
+            type = "description",
+            name = " ",
+            order = 2,
+            width = 0.1,
+        },
+        applyToAll = {
+            type = "execute",
+            name = "Apply to all",
+            desc = "Applies the font to use for all interface elements.",
+            func = function()
+                K:ApplyFontToAll()
+            end,
+            order = 3
+        },
+        divider01 = {
+            type = "description",
+            name = " ",
+            order = 4,
+            width = 'full',
+        },
+        chatFont = {
+            type = "toggle",
+            name = "Chat Font",
+            desc = "Applies font to chat",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 5,
+            width = 'full'
+        },
+        damageFont = {
+            type = "toggle",
+            name = "Damage Font",
+            desc = "Applies font to damage numbers",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 6,
+            width = 'full'
+        },
+        divider02 = {
+            type = "description",
+            name = " ",
+            order = 7,
+            width = 'full',
+        },
         header = {
             type = "header",
             name = "Chat Options",
-            order = 2,
+            order = 8,
         },
         fontSize = {
             type = "range",
@@ -30,7 +74,7 @@ local general = {
             desc = "Set size for Chat",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
-            order = 3,
+            order = 9,
             min = 8,
             max = 24,
             step = 1,

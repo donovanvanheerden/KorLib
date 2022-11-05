@@ -1,0 +1,3 @@
+[submodule "wow-api"]
+	path = wow-api
+	url = https://github.com/donovanvanheerden/wow-api

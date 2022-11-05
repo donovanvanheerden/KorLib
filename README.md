@@ -1,3 +1,3 @@
-# KorLib
+# TMT: The Missing Tidbits
 
-A WoW addon experiment
+A minor UI customisation addon, for options that should be baked in.

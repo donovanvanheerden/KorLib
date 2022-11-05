@@ -1,38 +1,38 @@
-local K = KorLib
+local T = TMT
 
-function K:ApplyBarTextures()
-	local customTextures = self.db.profile.unitFrames.customTextures;
+function T:ApplyBarTextures()
+	local customTextures = T.db.profile.unitFrames.customTextures;
 
-	local alternatePowerTexture = self.Shared:Fetch("statusbar", "Blizzard")
+	local alternatePowerTexture = T.Shared:Fetch("statusbar", "Blizzard")
 	local powerTexture = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Mana";
 	local healthTexture = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health"
 
 	if customTextures then
-		self.StatusBars.alternateManaPower:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.alternatePower))
-		self.StatusBars.power:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.power))
-		self.StatusBars.player:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.health))
+		T.StatusBars.alternateManaPower:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.alternatePower))
+		T.StatusBars.power:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.power))
+		T.StatusBars.player:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.health))
 	else
-		self.StatusBars.alternateManaPower:SetStatusBarTexture(alternatePowerTexture)
-		self.StatusBars.power:SetStatusBarTexture(powerTexture)
-		self.StatusBars.player:SetStatusBarTexture(healthTexture)
+		T.StatusBars.alternateManaPower:SetStatusBarTexture(alternatePowerTexture)
+		T.StatusBars.power:SetStatusBarTexture(powerTexture)
+		T.StatusBars.player:SetStatusBarTexture(healthTexture)
 	end
 
 end
 
-function K:SetBarTexture(info, value)
+function T:SetBarTexture(info, value)
 	local key = info[#info]
 
-	self.db.profile.unitFrames[key] = value
+	T.db.profile.unitFrames[key] = value
 
-	local texture = self.Shared:Fetch("statusbar", value);
+	local texture = T.Shared:Fetch("statusbar", value);
 
 	if key == "alternatePower" then
-		self.StatusBars.alternateManaPower:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
+		T.StatusBars.alternateManaPower:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
 	elseif key == "power" then
-		self.StatusBars.power:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
+		T.StatusBars.power:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
 	else
-		self.StatusBars.player:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
+		T.StatusBars.player:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
 	end
 
-	self:RecolourUnitFrames()
+	T:RecolourUnitFrames()
 end

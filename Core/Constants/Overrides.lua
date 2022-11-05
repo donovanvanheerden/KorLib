@@ -1,4 +1,4 @@
-local K = KorLib
+local T = TMT
 
 local powerColours = {
     MANA = {
@@ -8,8 +8,8 @@ local powerColours = {
     }
 }
 
-K._Defaults.PowerColours = powerColours
+T._Defaults.PowerColours = powerColours
 
-function K:GetPowerOverride(power)
-    return self._Defaults.PowerColours[power]
+function T:GetPowerOverride(power)
+    return T._Defaults.PowerColours[power]
 end

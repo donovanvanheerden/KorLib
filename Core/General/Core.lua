@@ -1,42 +1,42 @@
-local K = KorLib
+local T = TMT
 
 local AceConfig = _G.LibStub("AceConfig-3.0")
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0")
 local AceDbOptions = _G.LibStub("AceDBOptions-3.0")
 
-function K:RegisterEvents()
-	self:RegisterEvent("PLAYER_TARGET_CHANGED")
-	self:RegisterEvent("PLAYER_FOCUS_CHANGED")
-	self:RegisterEvent("PLAYER_LOGIN")
-	self:RegisterEvent("ADDON_LOADED")
+function T:RegisterEvents()
+	T:RegisterEvent("PLAYER_TARGET_CHANGED")
+	T:RegisterEvent("PLAYER_FOCUS_CHANGED")
+	T:RegisterEvent("PLAYER_LOGIN")
+	T:RegisterEvent("ADDON_LOADED")
 end
 
-function K:RegisterCommands()
-    self:RegisterChatCommand("k", "SlashCommand")
-	self:RegisterChatCommand("kl", "SlashCommand")
+function T:RegisterCommands()
+    T:RegisterChatCommand("k", "SlashCommand")
+	T:RegisterChatCommand("kl", "SlashCommand")
 end
 
-function K:SlashCommand(input)
+function T:SlashCommand(input)
 	if InCombatLockdown() then
-		self:Print("Cannot access options during combat.")
+		T:Print("Cannot access options during combat.")
 		return
 	end
 
 	if input == "debug" then
-		self.db.debug = not self.db.debug
-		self:Print("debug: " .. (self.db.debug and "on" or "off"))
+		T.db.debug = not T.db.debug
+		T:Print("debug: " .. (T.db.debug and "on" or "off"))
 	elseif input:trim() == "" then
-		AceConfigDialog:Open(self.name)
+		AceConfigDialog:Open(T.name)
 	end
 end
 
-function K:PLAYER_LOGIN()
-    self:ApplyFont()
-    self:ApplyStatusBarColors()
+function T:PLAYER_LOGIN()
+    T:ApplyFont()
+    T:ApplyStatusBarColors()
 
-    self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
+    T:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
 end
 
-function K:ADDON_LOADED()
-    self:ApplyFont()
+function T:ADDON_LOADED()
+    T:ApplyFont()
 end

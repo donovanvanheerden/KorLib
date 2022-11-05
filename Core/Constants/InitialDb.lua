@@ -1,4 +1,4 @@
-local K = KorLib
+local T = TMT
 
 local defaultDb = {
     profile = {
@@ -21,4 +21,4 @@ local defaultDb = {
     }
 }
 
-K._Defaults.InitialDb = defaultDb
+T._Defaults.InitialDb = defaultDb

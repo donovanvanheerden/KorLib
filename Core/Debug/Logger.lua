@@ -1,15 +1,15 @@
---@type class KorLib
-local K = KorLib
+--@type class TMT
+local T = TMT
 
-function K:Log(...)
-    if (self.db == nil or not self.db.debug) then return end
+function T:Log(...)
+    if (T.db == nil or not T.db.debug) then return end
 
-    self:Print(...)
+    T:Print(...)
 end
 
 --- Uses the DevTools_Dump internally, only outputs if in debug mode
-function K:Dump(value)
-    if (not self.db.debug) then return end
+function T:Dump(value)
+    if (not T.db.debug) then return end
 
     DevTools_Dump(value)
 end
@@ -17,8 +17,8 @@ end
 --- Tries to dump variable
 ---@param table table
 ---@param depth number
-function K:DumpTable(table, depth)
-    if (not self.db.debug) then return end
+function T:DumpTable(table, depth)
+    if (not T.db.debug) then return end
 
 	local padding = ""
 
@@ -31,7 +31,7 @@ function K:DumpTable(table, depth)
 	else
 		for key, value in pairs(table) do
 			if type(value) == "table" then
-				self:DumpTable(value, depth + 1)
+				T:DumpTable(value, depth + 1)
 			else
 				print(padding, key, ": ", value)
 			end

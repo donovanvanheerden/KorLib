@@ -1,4 +1,4 @@
-local K = KorLib
+local T = TMT
 
 -- roman: Fonts\ARIALN.TFF
 -- korean: Fonts\2002.TFF
@@ -17,15 +17,15 @@ local function SetFont(obj, font, size, style)
 	obj:SetFont(font, size, style)
 end
 
-function K:FontSizeChanged(dropDown, chatFrame, fontSize)
+function T:FontSizeChanged(dropDown, chatFrame, fontSize)
     if not chatFrame then chatFrame = _G.FCF_GetCurrentChatFrame() end
     if not fontSize then fontSize = dropDown.value end
 
     local _, oldSize, oldStyle = chatFrame:GetFont()
 
-    local font = self.Shared:Fetch('font', self.db.profile.general.font);
+    local font = T.Shared:Fetch('font', T.db.profile.general.font);
 
-    self.db.profile.general.fontSize = fontSize
+    T.db.profile.general.fontSize = fontSize
 
     for i = 1, 50 do
         if _G["ChatFrame" .. i] then
@@ -36,47 +36,47 @@ function K:FontSizeChanged(dropDown, chatFrame, fontSize)
     end
 end
 
-function K:GetGeneralOption(info)
+function T:GetGeneralOption(info)
     local key = info[#info]
 
-    return self.db.profile.general[key]
+    return T.db.profile.general[key]
 end
 
-function K:SetGeneralOption(info, value)
+function T:SetGeneralOption(info, value)
     local key = info[#info]
 
-    self.db.profile.general[key] = value
+    T.db.profile.general[key] = value
 
-    if (key == 'font' and self.db.profile.general.appliedToAll) then
-        self.db.profile.general.appliedToAll = false
+    if (key == 'font' and T.db.profile.general.appliedToAll) then
+        T.db.profile.general.appliedToAll = false
     end
 
     if (key == "chatFont" or key == "damageFont") then
-        self:ApplyFont()
-    elseif key == "font" and (self.db.profile.general.chatFont or self.db.profile.general.damageFont) then
-        self:ApplyFont()
+        T:ApplyFont()
+    elseif key == "font" and (T.db.profile.general.chatFont or T.db.profile.general.damageFont) then
+        T:ApplyFont()
     elseif key == 'fontSize' then
-        self:FontSizeChanged(nil, nil, value)
+        T:FontSizeChanged(nil, nil, value)
     end
 end
 
-function K:ApplyFontToAll()
-    self.db.profile.general.appliedToAll = true
-    self.db.profile.general.chatFont = true;
-    self.db.profile.general.damageFont = true
+function T:ApplyFontToAll()
+    T.db.profile.general.appliedToAll = true
+    T.db.profile.general.chatFont = true;
+    T.db.profile.general.damageFont = true
 
-    self:ApplyFont()
+    T:ApplyFont()
 end
 
-function K:ApplyFont()
+function T:ApplyFont()
     ---@type string
-    local _defaultFont = self.Shared:Fetch('font', self._Defaults.InitialDb.profile.general.font);
+    local _defaultFont = T.Shared:Fetch('font', T._Defaults.InitialDb.profile.general.font);
 
-    local profileFont, font, chatFont, damageFont = self.Shared:Fetch('font', self.db.profile.general.font)
+    local profileFont, font, chatFont, damageFont = T.Shared:Fetch('font', T.db.profile.general.font)
 
-    if self.db.profile.general.appliedToAll then font = profileFont else font = _defaultFont end
-    if self.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
-    if self.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
+    if T.db.profile.general.appliedToAll then font = profileFont else font = _defaultFont end
+    if T.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
+    if T.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
 
     _G.STANDARD_TEXT_FONT          = font
     _G.UNIT_NAME_FONT              = font
@@ -211,7 +211,7 @@ function K:ApplyFont()
     for i = 1, 50 do
         if _G["ChatFrame" .. i] then
             local oldFont, oldSize, oldStyle  = _G["ChatFrame" .. i]:GetFont()
-            local fontSize = self.db.profile.general.fontSize or ForcedFontSize[i] or oldSize
+            local fontSize = T.db.profile.general.fontSize or ForcedFontSize[i] or oldSize
 
             SetFont(_G["ChatFrame" .. i], chatFont, fontSize, oldStyle)
         end
@@ -233,15 +233,15 @@ do -- scoped precaching for fonts
         end
     end
 
-	local sharedFonts = K.Shared:HashTable('font')
+	local sharedFonts = T.Shared:HashTable('font')
 
 	for _, fontPath in next, sharedFonts do
 		preloadFont(fontPath)
 	end
 
-	local applyFonts = function() K:ApplyFont() end
+	local applyFonts = function() T:ApplyFont() end
 
-	hooksecurefunc(K.Shared, 'Register', function(_, mediaType, _, data)
+	hooksecurefunc(T.Shared, 'Register', function(_, mediaType, _, data)
 		if not mediaType or type(mediaType) ~= 'string' then return else mediaType = mediaType:lower() end
 
 		if mediaType == 'font' then

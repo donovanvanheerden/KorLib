@@ -1,4 +1,4 @@
-local K = KorLib
+local T = TMT
 
 local general = {
     type = "group",
@@ -12,7 +12,7 @@ local general = {
         font = {
             type = "select",
             name = "Font",
-            values = K.Shared:HashTable("font"),
+            values = T.Shared:HashTable("font"),
             dialogControl = "LSM30_Font",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
@@ -29,7 +29,7 @@ local general = {
             name = "Apply to all",
             desc = "Applies the font to use for all interface elements. |cffff0000This will require a logout and login for damage numbers to change.",
             func = function()
-                K:ApplyFontToAll()
+                T:ApplyFontToAll()
             end,
             order = 3
         },
@@ -199,8 +199,8 @@ local unitFrames = {
 }
 
 local addonOptions = {
-    name = K.name,
-    handler = K,
+    name = T.name,
+    handler = T,
     type = "group",
     args = {
         general = general,
@@ -208,4 +208,4 @@ local addonOptions = {
     }
 }
 
-K.Options = addonOptions
+T.Options = addonOptions

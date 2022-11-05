@@ -1,4 +1,4 @@
-local K = KorLib
+local T = TMT
 
 local statusBars = {
 	player = PlayerFrameHealthBar,
@@ -11,4 +11,4 @@ local statusBars = {
 	power = PlayerFrameManaBar
 }
 
-K.StatusBars = statusBars
+T.StatusBars = statusBars

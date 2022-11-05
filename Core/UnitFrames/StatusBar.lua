@@ -1,46 +1,46 @@
-local K = KorLib
+local T = TMT
 
-function K:PLAYER_TARGET_CHANGED()
+function T:PLAYER_TARGET_CHANGED()
 	local healthKey , nameKey, targetOfTarget = "target", "targetReputation", "playertargettarget"
 
-	self:ApplyStatusBarColor(healthKey, self.db.profile.unitFrames[healthKey])
-	self:ApplyStatusBarColor(nameKey, self.db.profile.unitFrames[nameKey])
-	self:ApplyStatusBarColor(targetOfTarget, self.db.profile.unitFrames[targetOfTarget])
+	T:ApplyStatusBarColor(healthKey, T.db.profile.unitFrames[healthKey])
+	T:ApplyStatusBarColor(nameKey, T.db.profile.unitFrames[nameKey])
+	T:ApplyStatusBarColor(targetOfTarget, T.db.profile.unitFrames[targetOfTarget])
 end
 
-function K:PLAYER_FOCUS_CHANGED()
+function T:PLAYER_FOCUS_CHANGED()
 	local healthKey , nameKey = "focus", "focusReputation"
 
-	self:ApplyStatusBarColor(healthKey, self.db.profile.unitFrames[healthKey])
-	self:ApplyStatusBarColor(nameKey, self.db.profile.unitFrames[nameKey])
+	T:ApplyStatusBarColor(healthKey, T.db.profile.unitFrames[healthKey])
+	T:ApplyStatusBarColor(nameKey, T.db.profile.unitFrames[nameKey])
 end
 
-function K:GetUnitFrameOption(info)
+function T:GetUnitFrameOption(info)
 	local key = info[#info]
 
-	return self.db.profile.unitFrames[key]
+	return T.db.profile.unitFrames[key]
 end
 
-function K:SetUnitFrameOption(info, value)
+function T:SetUnitFrameOption(info, value)
 	local key = info[#info] -- #info = gets index for value
 
-	self.db.profile.unitFrames[key] = value
+	T.db.profile.unitFrames[key] = value
 
-	self:ApplyStatusBarColor(key, value)
+	T:ApplyStatusBarColor(key, value)
 end
 
 --- Applies class color or unit color to selected status bar / unit frame element
 ---@param unitFrame string @ player, target, targetReputation, focus, focusReputation, playertargettarget, alternateManaPower
 ---@param enabled boolean
-function K:ApplyStatusBarColor(unitFrame, enabled)
-    K:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
+function T:ApplyStatusBarColor(unitFrame, enabled)
+    T:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
 
     local isTextureOption = unitFrame == "power" or unitFrame == "health" or "unitFrame" == "alternatePower"
 
 	enabled = isTextureOption and true or enabled
 
 
-	if self.StatusBars[unitFrame] == nil then return end
+	if T.StatusBars[unitFrame] == nil then return end
 
 	local target = string.gsub(unitFrame, "Reputation", "")
 
@@ -64,8 +64,8 @@ function K:ApplyStatusBarColor(unitFrame, enabled)
 			r, g, b = GetClassColor(class)
 		else
 
-			if unitFrame == "alternateManaPower" and self.StatusBars[unitFrame].powerName == "MANA" then
-                local override = self:GetPowerOverride(self.StatusBars[unitFrame].powerName)
+			if unitFrame == "alternateManaPower" and T.StatusBars[unitFrame].powerName == "MANA" then
+                local override = T:GetPowerOverride(T.StatusBars[unitFrame].powerName)
 
 				r, g, b = override.r, override.g, override.b
 			else
@@ -75,22 +75,22 @@ function K:ApplyStatusBarColor(unitFrame, enabled)
 	elseif unitFrame == "power" then
 		r, g, b = UnitSelectionColor(target)
 
-        K:Log(r, g, b)
+        T:Log(r, g, b)
 	end
 
 	if unitFrame == "targetReputation" or unitFrame == "focusReputation" then
 		if enabled then a = 1 end
 
-		self.StatusBars[unitFrame]:SetVertexColor(r, g, b, a)
+		T.StatusBars[unitFrame]:SetVertexColor(r, g, b, a)
 	else
-		self.StatusBars[unitFrame]:SetStatusBarDesaturated(enabled)
-		self.StatusBars[unitFrame]:SetStatusBarColor(r, g, b)
+		T.StatusBars[unitFrame]:SetStatusBarDesaturated(enabled)
+		T.StatusBars[unitFrame]:SetStatusBarColor(r, g, b)
 	end
 
 end
 
-function K:ApplyStatusBarColors()
-	for key, value in pairs(self.db.profile.unitFrames) do
-		self:ApplyStatusBarColor(key, value)
+function T:ApplyStatusBarColors()
+	for key, value in pairs(T.db.profile.unitFrames) do
+		T:ApplyStatusBarColor(key, value)
 	end
 end

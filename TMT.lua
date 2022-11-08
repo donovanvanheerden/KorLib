@@ -41,8 +41,8 @@ function T:OnInitialize()
 
     local profiles = AceDbOptions:GetOptionsTable(T.db)
 
-	AceConfig:RegisterOptionsTable("KorLib_Profiles", profiles)
-	AceConfigDialog:AddToBlizOptions("KorLib_Profiles", "Profiles", T.name)
+	AceConfig:RegisterOptionsTable(T.name.."_Profiles", profiles)
+	AceConfigDialog:AddToBlizOptions(T.name.."_Profiles", "Profiles", T.name)
 
     T:ApplyFont()
 

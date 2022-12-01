@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface: 100002
 
 ## Title: TMT - The Missing Tidbits
 ## Notes: A minor UI customisation addon, defaults that should be baked in.

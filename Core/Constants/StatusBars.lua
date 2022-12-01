@@ -1,7 +1,7 @@
 local T = TMT
 
 local statusBars = {
-	player = PlayerFrameHealthBar,
+	player = PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarArea.HealthBar,
 	target = TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar,
 	targetReputation = TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor,
 	focus = FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBar,

@@ -1,5 +1,16 @@
 local T = TMT
 
+local function Divider(width, order)
+    local _width = width or 'full'
+
+    return {
+        type = "description",
+        name = " ",
+        order = order,
+        width = _width,
+    }
+end
+
 local general = {
     type = "group",
     name = "General",
@@ -9,6 +20,20 @@ local general = {
             name = "Text Options",
             order = 0,
         },
+        textEnabled = {
+            type = "toggle",
+            name = "Enabled",
+            desc = "Enabled Text Module",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 1,
+        },
+        divider01 = {
+            type = "description",
+            name = " ",
+            order = 2,
+            width = 'full',
+        },
         font = {
             type = "select",
             name = "Font",
@@ -16,12 +41,12 @@ local general = {
             dialogControl = "LSM30_Font",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
-            order = 1
+            order = 3
         },
-        separator01 = {
+        separator02 = {
             type = "description",
             name = " ",
-            order = 2,
+            order = 4,
             width = 0.1,
         },
         applyToAll = {
@@ -31,12 +56,12 @@ local general = {
             func = function()
                 T:ApplyFontToAll()
             end,
-            order = 3
+            order = 5
         },
-        divider01 = {
+        divider02 = {
             type = "description",
             name = " ",
-            order = 4,
+            order = 6,
             width = 'full',
         },
         chatFont = {
@@ -45,7 +70,7 @@ local general = {
             desc = "Applies font to chat",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
-            order = 5,
+            order = 7,
             width = 'full'
         },
         damageFont = {
@@ -54,19 +79,19 @@ local general = {
             desc = "Applies font to damage numbers |cffff0000This will require a logout and login for damage fonts to change.",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
-            order = 6,
+            order = 8,
             width = 'full'
         },
-        divider02 = {
+        divider03 = {
             type = "description",
             name = " ",
-            order = 7,
+            order = 9,
             width = 'full',
         },
         header = {
             type = "header",
             name = "Chat Options",
-            order = 8,
+            order = 10,
         },
         fontSize = {
             type = "range",
@@ -74,7 +99,7 @@ local general = {
             desc = "Set size for Chat",
             get = "GetGeneralOption",
             set = "SetGeneralOption",
-            order = 9,
+            order = 11,
             min = 8,
             max = 24,
             step = 1,
@@ -86,6 +111,95 @@ local unitFrames = {
     type = "group",
     name = "Unit Frames",
     args = {
+        characterPanel = {
+            type = "group",
+            name = "Character Panel",
+            args = {
+                heading0 = {
+                    type = "header",
+                    name = "Character Panel",
+                    order = 0
+                },
+                enabled = {
+                    type = "toggle",
+                    name = "Show item level",
+                    desc = "Displays the item level on the character panel",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 1
+                },
+                divider1 = Divider(_, 2),
+                font = {
+                    type = "select",
+                    name = "Font",
+                    values = T.Shared:HashTable("font"),
+                    dialogControl = "LSM30_Font",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 3,
+                    disabled = "CharacterPanelDisabled"
+                },
+                separator = Divider(0.1, 4),
+                fontSize = {
+                    type = "range",
+                    name = "Font Size",
+                    desc = "Set size for ilevel on character panel",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 5,
+                    min = 8,
+                    max = 24,
+                    step = 1,
+                    disabled = "CharacterPanelDisabled"
+                },
+                divider2 = Divider(_, 6),
+                anchor = {
+                    type = "select",
+                    name = "Anchor",
+                    values = {
+                        TOP = "TOP",
+                        RIGHT = "RIGHT",
+                        BOTTOM = "BOTTOM",
+                        LEFT = "LEFT",
+                        TOPRIGHT = "TOPRIGHT",
+                        TOPLEFT = "TOPLEFT",
+                        BOTTOMRIGHT = "BOTTOMRIGHT",
+                        BOTTOMLEFT = "BOTTOMLEFT",
+                        CENTER = "CENTER",
+                    },
+                    -- dialogControl = "LSM30_Font",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 7,
+                    disabled = "CharacterPanelDisabled"
+                },
+                divider3 = Divider(_, 8),
+                anchorX = {
+                    type = "range",
+                    name = "X Offset",
+                    desc = "Set X offset relative to anchor position",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 9,
+                    min = 0,
+                    max = 32,
+                    step = 1,
+                    disabled = "CharacterPanelDisabled"
+                },
+                anchorY = {
+                    type = "range",
+                    name = "Y Offset",
+                    desc = "Set Y offset relative to anchor position",
+                    get = "GetCharacterPanelOption",
+                    set = "SetCharacterPanelOption",
+                    order = 10,
+                    min = 0,
+                    max = 32,
+                    step = 1,
+                    disabled = "CharacterPanelDisabled"
+                }
+            }
+        },
         heading0 = {
             type = "header",
             name = "Health Class Colors",
@@ -209,3 +323,5 @@ local addonOptions = {
 }
 
 T.Options = addonOptions
+
+

@@ -3,7 +3,7 @@ local T = TMT
 local defaultDb = {
     profile = {
         general = {
-            font = "2002",
+            font = "Expressway",
             fontSize = 12
         },
         unitFrames = {
@@ -16,7 +16,15 @@ local defaultDb = {
 			alternateManaPower = true,
 			customTextures = false,
 			health = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health",
-			power = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Mana"
+			power = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Mana",
+			characterPanel = {
+				anchor = "BOTTOM",
+				anchorX = 1,
+				anchorY = 3,
+				enabled = true,
+				font = "Expressway",
+				fontSize = 10
+			}
         }
     }
 }

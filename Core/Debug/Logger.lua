@@ -18,12 +18,12 @@ end
 ---@param table table
 ---@param depth number
 function T:DumpTable(table, depth)
-    if (not T.db.debug) then return end
+    -- if (not T.db.debug) then return end
 
 	local padding = ""
 
 	if depth > 0 then
-		padding = string.strrep(" ", depth)
+		padding = strrep(" ", depth)
 	end
 
 	if type(table) ~= "table" then

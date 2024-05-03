@@ -12,6 +12,7 @@ local T = TMT
 ---@param size number
 ---@param style string @ None, OUTLINE, MONOCHROME, THICKOUTLINE, MONOCHROME|OUTLINE, MONOCHROME|THICKOUTLINE 
 local function SetFont(obj, font, size, style)
+    if not T.db.profile.general.textEnabled then return end
 	if not obj then return end
 
 	obj:SetFont(font, size, style)
@@ -60,10 +61,21 @@ function T:SetGeneralOption(info, value)
     end
 end
 
+function T:GetFont(arg)
+    local selectedFont = arg or T.db.profile.general.font or T._Defaults.InitialDb.profile.general.font
+
+    local profileFont, font, chatFont, damageFont = T.Shared:Fetch('font', selectedFont)
+
+    if T.db.profile.general.appliedToAll then font = profileFont end
+
+    return font
+end
+
 function T:ApplyFontToAll()
     T.db.profile.general.appliedToAll = true
     T.db.profile.general.chatFont = true;
     T.db.profile.general.damageFont = true
+    T.db.profile.unitFrames.characterPanel.font = T.db.profile.general.font
 
     T:ApplyFont()
 end

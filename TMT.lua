@@ -30,6 +30,9 @@ function T:OnEnable()
     if T.db.debug then
         T:Print("debug mode enabled")
     end
+
+    -- Register Addon Integrations
+	T:RegisterIntegrations()
 end
 
 function T:OnInitialize()

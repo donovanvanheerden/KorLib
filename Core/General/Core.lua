@@ -4,6 +4,9 @@ local AceConfig = _G.LibStub("AceConfig-3.0")
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0")
 local AceDbOptions = _G.LibStub("AceDBOptions-3.0")
 
+SLASH_Addon1 = "tmt"
+SLASH_ReloadUI = "rl"
+
 function T:RegisterEvents()
 	T:RegisterEvent("PLAYER_TARGET_CHANGED")
 	T:RegisterEvent("PLAYER_FOCUS_CHANGED")
@@ -12,8 +15,12 @@ function T:RegisterEvents()
 end
 
 function T:RegisterCommands()
-    T:RegisterChatCommand("k", "SlashCommand")
-	T:RegisterChatCommand("kl", "SlashCommand")
+    T:RegisterChatCommand(SLASH_Addon1, "SlashCommand")
+	T:RegisterChatCommand(SLASH_ReloadUI, "ReloadUI")
+end
+
+function T:ReloadUI(message, editBox)
+	ConsoleExec("reloadui")
 end
 
 function T:SlashCommand(input)

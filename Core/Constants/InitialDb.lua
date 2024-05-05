@@ -1,4 +1,4 @@
-local T = TMT
+local _, addonTable = ...
 
 local defaultDb = {
     profile = {
@@ -29,4 +29,4 @@ local defaultDb = {
     }
 }
 
-T._Defaults.InitialDb = defaultDb
+addonTable._Defaults.InitialDb = defaultDb

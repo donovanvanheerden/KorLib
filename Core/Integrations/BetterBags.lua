@@ -1,5 +1,5 @@
-local addonName = ...
-local T = TMT
+local addonName, addonTable = ...
+local addon = addonTable.addon
 
 ---@class BetterBags: AceAddon
 local BetterBags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
@@ -16,7 +16,7 @@ local money = BetterBags:GetModule('MoneyFrame')
 
 ---@param bag Bag
 local function onBagRendered(_, bag, arg3)
-	local font = T:GetFont()
+	local font = addon:GetFont()
     local fontSize = 11
     local currencyPadding = 9
 
@@ -100,8 +100,8 @@ local function onBagRendered(_, bag, arg3)
     end
 end
 
-function T:BetterBags()
+function addon:BetterBags()
     events:RegisterMessage('bag/Rendered', onBagRendered)
 
-    print('BetterBags: '.. addonName .. ' integration enabled')
+    print('BetterBags: '.. addonName .. ' integration enabled.')
 end

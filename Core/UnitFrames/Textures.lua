@@ -1,38 +1,39 @@
-local T = TMT
+local _, addonTable = ...
+local addon = addonTable.addon
 
-function T:ApplyBarTextures()
-	local customTextures = T.db.profile.unitFrames.customTextures;
+function addon:ApplyBarTextures()
+	local customTextures = self.db.profile.unitFrames.customTextures;
 
-	local alternatePowerTexture = T.Shared:Fetch("statusbar", "Blizzard")
+	local alternatePowerTexture = self.Shared:Fetch("statusbar", "Blizzard")
 	local powerTexture = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Mana";
 	local healthTexture = "UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health"
 
 	if customTextures then
-		T.StatusBars.alternateManaPower:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.alternatePower))
-		T.StatusBars.power:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.power))
-		T.StatusBars.player:SetStatusBarTexture(T.Shared:Fetch("statusbar", T.db.profile.unitFrames.health))
+		addonTable.StatusBars.alternateManaPower:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.alternatePower))
+		addonTable.StatusBars.power:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.power))
+		addonTable.StatusBars.player:SetStatusBarTexture(self.Shared:Fetch("statusbar", self.db.profile.unitFrames.health))
 	else
-		T.StatusBars.alternateManaPower:SetStatusBarTexture(alternatePowerTexture)
-		T.StatusBars.power:SetStatusBarTexture(powerTexture)
-		T.StatusBars.player:SetStatusBarTexture(healthTexture)
+		addonTable.StatusBars.alternateManaPower:SetStatusBarTexture(alternatePowerTexture)
+		addonTable.StatusBars.power:SetStatusBarTexture(powerTexture)
+		addonTable.StatusBars.player:SetStatusBarTexture(healthTexture)
 	end
 
 end
 
-function T:SetBarTexture(info, value)
+function addon:SetBarTexture(info, value)
 	local key = info[#info]
 
-	T.db.profile.unitFrames[key] = value
+	self.db.profile.unitFrames[key] = value
 
-	local texture = T.Shared:Fetch("statusbar", value);
+	local texture = self.Shared:Fetch("statusbar", value);
 
 	if key == "alternatePower" then
-		T.StatusBars.alternateManaPower:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
+		addonTable.StatusBars.alternateManaPower:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
 	elseif key == "power" then
-		T.StatusBars.power:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
+		addonTable.StatusBars.power:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
 	else
-		T.StatusBars.player:SetStatusBarTexture(T.Shared:Fetch("statusbar", value))
+		addonTable.StatusBars.player:SetStatusBarTexture(self.Shared:Fetch("statusbar", value))
 	end
 
-	T:RecolourUnitFrames()
+	self:RecolourUnitFrames()
 end

@@ -1,4 +1,7 @@
-local T = TMT
+local _, addonTable = ...
+
+local addon = addonTable.addon
+local defaults = addonTable._Defaults
 
 -- roman: Fonts\ARIALN.TFF
 -- korean: Fonts\2002.TFF
@@ -12,21 +15,21 @@ local T = TMT
 ---@param size number
 ---@param style string @ None, OUTLINE, MONOCHROME, THICKOUTLINE, MONOCHROME|OUTLINE, MONOCHROME|THICKOUTLINE 
 local function SetFont(obj, font, size, style)
-    if not T.db.profile.general.textEnabled then return end
+    if not addon.db.profile.general.textEnabled then return end
 	if not obj then return end
 
 	obj:SetFont(font, size, style)
 end
 
-function T:FontSizeChanged(dropDown, chatFrame, fontSize)
+function addon:FontSizeChanged(dropDown, chatFrame, fontSize)
     if not chatFrame then chatFrame = _G.FCF_GetCurrentChatFrame() end
     if not fontSize then fontSize = dropDown.value end
 
     local _, oldSize, oldStyle = chatFrame:GetFont()
 
-    local font = T.Shared:Fetch('font', T.db.profile.general.font);
+    local font = self.Shared:Fetch('font', addon.db.profile.general.font);
 
-    T.db.profile.general.fontSize = fontSize
+    self.db.profile.general.fontSize = fontSize
 
     for i = 1, 50 do
         if _G["ChatFrame" .. i] then
@@ -37,58 +40,58 @@ function T:FontSizeChanged(dropDown, chatFrame, fontSize)
     end
 end
 
-function T:GetGeneralOption(info)
+function addon:GetGeneralOption(info)
     local key = info[#info]
 
-    return T.db.profile.general[key]
+    return self.db.profile.general[key]
 end
 
-function T:SetGeneralOption(info, value)
+function addon:SetGeneralOption(info, value)
     local key = info[#info]
 
-    T.db.profile.general[key] = value
+    self.db.profile.general[key] = value
 
-    if (key == 'font' and T.db.profile.general.appliedToAll) then
-        T.db.profile.general.appliedToAll = false
+    if (key == 'font' and self.db.profile.general.appliedToAll) then
+        self.db.profile.general.appliedToAll = false
     end
 
     if (key == "chatFont" or key == "damageFont") then
-        T:ApplyFont()
-    elseif key == "font" and (T.db.profile.general.chatFont or T.db.profile.general.damageFont) then
-        T:ApplyFont()
+        self:ApplyFont()
+    elseif key == "font" and (self.db.profile.general.chatFont or self.db.profile.general.damageFont) then
+        self:ApplyFont()
     elseif key == 'fontSize' then
-        T:FontSizeChanged(nil, nil, value)
+        self:FontSizeChanged(nil, nil, value)
     end
 end
 
-function T:GetFont(arg)
-    local selectedFont = arg or T.db.profile.general.font or T._Defaults.InitialDb.profile.general.font
+function addon:GetFont(arg)
+    local selectedFont = arg or self.db.profile.general.font or defaults.InitialDb.profile.general.font
 
-    local profileFont, font, chatFont, damageFont = T.Shared:Fetch('font', selectedFont)
+    local profileFont, font, chatFont, damageFont = addon.Shared:Fetch('font', selectedFont)
 
-    if T.db.profile.general.appliedToAll then font = profileFont end
+    if self.db.profile.general.appliedToAll then font = profileFont end
 
     return font
 end
 
-function T:ApplyFontToAll()
-    T.db.profile.general.appliedToAll = true
-    T.db.profile.general.chatFont = true;
-    T.db.profile.general.damageFont = true
-    T.db.profile.unitFrames.characterPanel.font = T.db.profile.general.font
+function addon:ApplyFontToAll()
+    self.db.profile.general.appliedToAll = true
+    self.db.profile.general.chatFont = true;
+    self.db.profile.general.damageFont = true
+    self.db.profile.unitFrames.characterPanel.font = self.db.profile.general.font
 
-    T:ApplyFont()
+    self:ApplyFont()
 end
 
-function T:ApplyFont()
+function addon:ApplyFont()
     ---@type string
-    local _defaultFont = T.Shared:Fetch('font', T._Defaults.InitialDb.profile.general.font);
+    local _defaultFont = addon.Shared:Fetch('font', defaults.InitialDb.profile.general.font);
 
-    local profileFont, font, chatFont, damageFont = T.Shared:Fetch('font', T.db.profile.general.font)
+    local profileFont, font, chatFont, damageFont = addon.Shared:Fetch('font', self.db.profile.general.font)
 
-    if T.db.profile.general.appliedToAll then font = profileFont else font = _defaultFont end
-    if T.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
-    if T.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
+    if self.db.profile.general.appliedToAll then font = profileFont else font = _defaultFont end
+    if self.db.profile.general.chatFont then chatFont = profileFont else chatFont = _defaultFont end
+    if self.db.profile.general.damageFont then damageFont = profileFont else damageFont = _defaultFont end
 
     _G.STANDARD_TEXT_FONT          = font
     _G.UNIT_NAME_FONT              = font
@@ -223,7 +226,7 @@ function T:ApplyFont()
     for i = 1, 50 do
         if _G["ChatFrame" .. i] then
             local oldFont, oldSize, oldStyle  = _G["ChatFrame" .. i]:GetFont()
-            local fontSize = T.db.profile.general.fontSize or ForcedFontSize[i] or oldSize
+            local fontSize = self.db.profile.general.fontSize or ForcedFontSize[i] or oldSize
 
             SetFont(_G["ChatFrame" .. i], chatFont, fontSize, oldStyle)
         end
@@ -245,15 +248,15 @@ do -- scoped precaching for fonts
         end
     end
 
-	local sharedFonts = T.Shared:HashTable('font')
+	local sharedFonts = addon.Shared:HashTable('font')
 
 	for _, fontPath in next, sharedFonts do
 		preloadFont(fontPath)
 	end
 
-	local applyFonts = function() T:ApplyFont() end
+	local applyFonts = function() addon:ApplyFont() end
 
-	hooksecurefunc(T.Shared, 'Register', function(_, mediaType, _, data)
+	hooksecurefunc(addon.Shared, 'Register', function(_, mediaType, _, data)
 		if not mediaType or type(mediaType) ~= 'string' then return else mediaType = mediaType:lower() end
 
 		if mediaType == 'font' then

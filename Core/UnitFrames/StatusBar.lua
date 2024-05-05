@@ -1,46 +1,47 @@
-local T = TMT
+local _, addonTable = ...
+local addon = addonTable.addon
 
-function T:PLAYER_TARGET_CHANGED()
+function addon:UpdateTarget()
 	local healthKey , nameKey, targetOfTarget = "target", "targetReputation", "playertargettarget"
 
-	T:ApplyStatusBarColor(healthKey, T.db.profile.unitFrames[healthKey])
-	T:ApplyStatusBarColor(nameKey, T.db.profile.unitFrames[nameKey])
-	T:ApplyStatusBarColor(targetOfTarget, T.db.profile.unitFrames[targetOfTarget])
+	self:ApplyStatusBarColor(healthKey, self.db.profile.unitFrames[healthKey])
+	self:ApplyStatusBarColor(nameKey, self.db.profile.unitFrames[nameKey])
+	self:ApplyStatusBarColor(targetOfTarget, self.db.profile.unitFrames[targetOfTarget])
 end
 
-function T:PLAYER_FOCUS_CHANGED()
+function addon:UpdateFocus()
 	local healthKey , nameKey = "focus", "focusReputation"
 
-	T:ApplyStatusBarColor(healthKey, T.db.profile.unitFrames[healthKey])
-	T:ApplyStatusBarColor(nameKey, T.db.profile.unitFrames[nameKey])
+	self:ApplyStatusBarColor(healthKey, self.db.profile.unitFrames[healthKey])
+	self:ApplyStatusBarColor(nameKey, self.db.profile.unitFrames[nameKey])
 end
 
-function T:GetUnitFrameOption(info)
+function addon:GetUnitFrameOption(info)
 	local key = info[#info]
 
-	return T.db.profile.unitFrames[key]
+	return self.db.profile.unitFrames[key]
 end
 
-function T:SetUnitFrameOption(info, value)
+function addon:SetUnitFrameOption(info, value)
 	local key = info[#info] -- #info = gets index for value
 
-	T.db.profile.unitFrames[key] = value
+	self.db.profile.unitFrames[key] = value
 
-	T:ApplyStatusBarColor(key, value)
+	self:ApplyStatusBarColor(key, value)
 end
 
 --- Applies class color or unit color to selected status bar / unit frame element
 ---@param unitFrame string @ player, target, targetReputation, focus, focusReputation, playertargettarget, alternateManaPower
 ---@param enabled boolean
-function T:ApplyStatusBarColor(unitFrame, enabled)
-    T:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
+function addon:ApplyStatusBarColor(unitFrame, enabled)
+    self:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
 
     local isTextureOption = unitFrame == "power" or unitFrame == "health" or "unitFrame" == "alternatePower"
 
 	enabled = isTextureOption and true or enabled
 
 
-	if T.StatusBars[unitFrame] == nil then return end
+	if addonTable.StatusBars[unitFrame] == nil then return end
 
 	local target = string.gsub(unitFrame, "Reputation", "")
 
@@ -64,8 +65,8 @@ function T:ApplyStatusBarColor(unitFrame, enabled)
 			r, g, b = GetClassColor(class)
 		else
 
-			if unitFrame == "alternateManaPower" and T.StatusBars[unitFrame].powerName == "MANA" then
-                local override = T:GetPowerOverride(T.StatusBars[unitFrame].powerName)
+			if unitFrame == "alternateManaPower" and addonTable.StatusBars[unitFrame].powerName == "MANA" then
+                local override = self:GetPowerOverride(addonTable.StatusBars[unitFrame].powerName)
 
 				r, g, b = override.r, override.g, override.b
 			else
@@ -75,22 +76,30 @@ function T:ApplyStatusBarColor(unitFrame, enabled)
 	elseif unitFrame == "power" then
 		r, g, b = UnitSelectionColor(target)
 
-        T:Log(r, g, b)
+        self:Log(r, g, b)
 	end
 
 	if unitFrame == "targetReputation" or unitFrame == "focusReputation" then
 		if enabled then a = 1 end
 
-		T.StatusBars[unitFrame]:SetVertexColor(r, g, b, a)
+		addonTable.StatusBars[unitFrame]:SetVertexColor(r, g, b, a)
 	else
-		T.StatusBars[unitFrame]:SetStatusBarDesaturated(enabled)
-		T.StatusBars[unitFrame]:SetStatusBarColor(r, g, b)
+		addonTable.StatusBars[unitFrame]:SetStatusBarDesaturated(enabled)
+		addonTable.StatusBars[unitFrame]:SetStatusBarColor(r, g, b)
 	end
 
 end
 
-function T:ApplyStatusBarColors()
-	for key, value in pairs(T.db.profile.unitFrames) do
-		T:ApplyStatusBarColor(key, value)
+function addon:ApplyStatusBarColors()
+	for key, value in pairs(self.db.profile.unitFrames) do
+		self:ApplyStatusBarColor(key, value)
 	end
+
+	self:SecureHook(_G.TargetFrame, "Update", function()
+		self:UpdateTarget()
+	end)
+
+	self:SecureHook(_G.FocusFrame, "Update", function()
+		self:UpdateFocus()
+	end)
 end

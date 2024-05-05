@@ -1,6 +1,6 @@
-local T = TMT
-
-local ipairs = ipairs
+local _, addonTable = ...
+local addon = addonTable.addon
+local defaults = addonTable._Defaults
 
 local ITEM_SLOT_FRAMES = {
 	CharacterHeadSlot,CharacterNeckSlot,CharacterShoulderSlot,CharacterBackSlot,CharacterChestSlot,CharacterWristSlot,
@@ -9,45 +9,45 @@ local ITEM_SLOT_FRAMES = {
 	CharacterMainHandSlot,CharacterSecondaryHandSlot,
 }
 
-function T:CharacterPanelDisabled()
-	return T:GetCharacterPanelOption({'enabled'}) == false
+function addon:CharacterPanelDisabled()
+	return self:GetCharacterPanelOption({'enabled'}) == false
 end
 
-function T:GetCharacterPanelOption(info)
+function addon:GetCharacterPanelOption(info)
 	local key = info[#info]
 
-	return T.db.profile.unitFrames.characterPanel[key]
+	return self.db.profile.unitFrames.characterPanel[key]
 end
 
-function T:SetCharacterPanelOption(info, value)
+function addon:SetCharacterPanelOption(info, value)
 	local key = info[#info] -- #info = gets index for value
 
-	T.db.profile.unitFrames.characterPanel[key] = value
+	self.db.profile.unitFrames.characterPanel[key] = value
 
 	if (key == 'enabled') then
-		T:SetItemLevelValues()
+		self:SetItemLevelValues()
 	else
-		T:PositionILevelSlots()
+		self:PositionILevelSlots()
 	end
 end
 
-for _, v in ipairs(ITEM_SLOT_FRAMES) do
-    v.ilevel = v:CreateFontString("FontString", "OVERLAY", "GameTooltipText")
-    v.ilevel:SetFormattedText("")
+for _, slot in ipairs(ITEM_SLOT_FRAMES) do
+    slot.ilevel = slot:CreateFontString("FontString", "OVERLAY", "GameTooltipText")
+    slot.ilevel:SetFormattedText("")
 end
 
-function T:ClearAll()
+function addon:ClearAll()
 	for _, slot in ipairs(ITEM_SLOT_FRAMES) do
         slot.ilevel:SetFormattedText("")
     end
 end
 
-function T:PositionILevelSlots()
-	local anchor = T:GetCharacterPanelOption({'anchor'})
-	local x = T:GetCharacterPanelOption({'anchorX'})
-	local y = T:GetCharacterPanelOption({'anchorY'})
-	local font = T:GetFont(T:GetCharacterPanelOption({'font'}))
-	local fontSize = T:GetCharacterPanelOption({'fontSize'}) or T._Defaults.InitialDb.characterPanel.fontSize
+function addon:PositionILevelSlots()
+	local anchor = self:GetCharacterPanelOption({'anchor'})
+	local x = self:GetCharacterPanelOption({'anchorX'})
+	local y = self:GetCharacterPanelOption({'anchorY'})
+	local font = self:GetFont(self:GetCharacterPanelOption({'font'}))
+	local fontSize = self:GetCharacterPanelOption({'fontSize'}) or defaults.InitialDb.characterPanel.fontSize
 
     for _, slot in ipairs(ITEM_SLOT_FRAMES) do
         slot.ilevel:ClearAllPoints()
@@ -59,28 +59,28 @@ end
 
 
 
-local function attempt_ilvl(v,attempts)
+local function attempt_ilvl(slot, attempts)
 	if attempts > 0 then
-		local nItem = Item:CreateFromEquipmentSlot(v:GetID())
+		local nItem = Item:CreateFromEquipmentSlot(slot:GetID())
 		local value = nItem:GetCurrentItemLevel()
 
-		if value then --ilvl of nil probably indicates that there's no tem in that slot
+		if value then --ilvl of nil probably indicates that there's no item in that slot
 			if value > 0 then --ilvl of 0 probably indicates that item is not fully loaded
 				local r, g, b = GetItemQualityColor(nItem:GetItemQuality());
-				v.ilevel:SetTextColor(r, g, b, 1) --upvalue call
-				v.ilevel:SetText(value)
+				slot.ilevel:SetTextColor(r, g, b, 1) --upvalue call
+				slot.ilevel:SetText(value)
 			else
-				C_Timer.After(0.2, function() attempt_ilvl(v,attempts-1) end)
+				C_Timer.After(0.2, function() attempt_ilvl(slot, attempts - 1) end)
 			end
 		else
-			v.ilevel:SetText("")
+			slot.ilevel:SetText("")
 		end
 	end
 end
 
-function T:SetItemLevelValues()
-	if (T:CharacterPanelDisabled()) then
-		T:ClearAll()
+function addon:SetItemLevelValues()
+	if (self:CharacterPanelDisabled()) then
+		self:ClearAll()
 	else
 		for _, v in ipairs(ITEM_SLOT_FRAMES) do
 			attempt_ilvl(v, 20)
@@ -100,7 +100,7 @@ local ShowItemLevelCheck = CreateFrame("Frame", "ShowItemLevelCheck", UIParent)
 ShowItemLevelCheck:SetScript("OnEvent", function(self, ...)
 	-- showitemlevel = gdbprivate.gdb.gdbdefaults.dejacharacterstatsShowItemLevelChecked.ShowItemLevelSetChecked
 	-- self:SetChecked(showitemlevel)
-	T:PositionILevelSlots()
+	addon:PositionILevelSlots()
 end)
 
 -- ShowItemLevelCheck:SetScript("OnClick", function(self)
@@ -123,10 +123,10 @@ local ShowItemLevelChange = CreateFrame("Frame", "ShowItemLevelChange", UIParent
 ShowItemLevelChange:SetScript("OnEvent", function(self, ...)
 	if PaperDollFrame:IsVisible() then
 		-- if showitemlevel then
-			C_Timer.After(0.25, function() T:SetItemLevelValues() end) --Event fires before Artifact changes so we have to wait a fraction of a second.
+			C_Timer.After(0.25, function() addon:SetItemLevelValues() end) --Event fires before Artifact changes so we have to wait a fraction of a second.
 		-- else
-			for _, v in ipairs(ITEM_SLOT_FRAMES) do
-				v.ilevel:SetFormattedText("")
+			for _, slot in ipairs(ITEM_SLOT_FRAMES) do
+				slot.ilevel:SetFormattedText("")
 			end
 		-- end
 	end
@@ -134,7 +134,7 @@ end)
 
 PaperDollFrame:HookScript("OnShow", function(self)
 	-- if showitemlevel then
-		T:SetItemLevelValues()
+		addon:SetItemLevelValues()
 	-- else
 	-- 	for _, v in ipairs(DCSITEM_SLOT_FRAMES) do
 	-- 		v.ilevel:SetFormattedText("")

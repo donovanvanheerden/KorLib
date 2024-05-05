@@ -1,5 +1,6 @@
-local T = TMT
+local _, addonTable = ...
+local addon = addonTable.addon
 
-function T:RegisterIntegrations()
-    T:BetterBags()
+function addon:RegisterIntegrations()
+    self:BetterBags()
 end

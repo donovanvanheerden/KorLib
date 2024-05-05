@@ -1,4 +1,4 @@
-local _, addonTable = ...
+local addonName, addonTable = ...
 local addon = addonTable.addon
 
 local AceConfig = _G.LibStub("AceConfig-3.0")
@@ -32,7 +32,7 @@ function addon:SlashCommand(input)
 		self.db.debug = not self.db.debug
 		self:Print("debug: " .. (self.db.debug and "on" or "off"))
 	elseif input:trim() == "" then
-		AceConfigDialog:Open(T.name)
+		AceConfigDialog:Open(addonName)
 	end
 end
 

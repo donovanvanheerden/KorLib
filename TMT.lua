@@ -38,7 +38,9 @@ end
 function addon:OnInitialize()
     addon.db = _G.LibStub("AceDB-3.0"):New(addon.dbName, addonTable._Defaults.InitialDb, true)
 
-    AceConfig:RegisterOptionsTable(addon.name, addonTable.Options)
+    local options = addon:GetOptions()
+
+    AceConfig:RegisterOptionsTable(addon.name, options)
 
     addon.optionsFrame = AceConfigDialog:AddToBlizOptions(addon.name, addon.name)
 

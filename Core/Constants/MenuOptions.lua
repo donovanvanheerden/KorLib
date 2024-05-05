@@ -1,4 +1,5 @@
-local _, addonTable = ...
+local addonName, addonTable = ...
+local addon = addonTable.addon
 
 local function Divider(width, order)
     local _width = width or 'full'
@@ -15,7 +16,7 @@ local function FontSelect(getter, setter, width, order)
     return {
         type = "select",
         name = "Font",
-        values = _G.LibStub("LibSharedMedia-3.0"):HashTable("font"),
+        values = addon.Shared:HashTable("font"),
         dialogControl = "LSM30_Font",
         get = getter,
         set = setter,
@@ -47,16 +48,16 @@ local general = {
             order = 2,
             width = 'full',
         },
-        font = FontSelect("GetGeneralOption", "SetGeneralOption", nil, 3),
-        -- font = {
-        --     type = "select",
-        --     name = "Font",
-        --     values = _G.LibStub("LibSharedMedia-3.0"):HashTable("font"),
-        --     dialogControl = "LSM30_Font",
-        --     get = "GetGeneralOption",
-        --     set = "SetGeneralOption",
-        --     order = 3
-        -- },
+        -- font = FontSelect("GetGeneralOption", "SetGeneralOption", nil, 3),
+        font = {
+            type = "select",
+            name = "Font",
+            values = addon.Shared:HashTable("font"),
+            dialogControl = "LSM30_Font",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 3
+        },
         separator02 = {
             type = "description",
             name = " ",
@@ -195,7 +196,7 @@ local unitFrames = {
                     get = "GetCharacterPanelOption",
                     set = "SetCharacterPanelOption",
                     order = 9,
-                    min = 0,
+                    min = -10,
                     max = 32,
                     step = 1,
                     disabled = "CharacterPanelDisabled"
@@ -207,7 +208,7 @@ local unitFrames = {
                     get = "GetCharacterPanelOption",
                     set = "SetCharacterPanelOption",
                     order = 10,
-                    min = 0,
+                    min = -10,
                     max = 32,
                     step = 1,
                     disabled = "CharacterPanelDisabled"
@@ -254,14 +255,16 @@ local unitFrames = {
     }
 }
 
-addonTable.Options = {
-    name = addonTable.name,
-    handler = addonTable,
-    type = "group",
-    args = {
-        general = general,
-        unitFrames = unitFrames,
-    }
+function addon:GetOptions()
+    return {
+        name = addonName,
+        handler = addon,
+        type = "group",
+        args = {
+            general = general,
+            unitFrames = unitFrames,
+        }
 }
+end
 
 

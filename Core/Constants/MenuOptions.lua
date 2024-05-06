@@ -69,7 +69,7 @@ local general = {
             name = "Apply to all",
             desc = "Applies the font to use for all interface elements. |cffff0000This will require a logout and login for damage numbers to change.",
             func = function()
-                addonTable:ApplyFontToAll()
+                addon:ApplyFontToAll()
             end,
             order = 5
         },

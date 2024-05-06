@@ -67,11 +67,7 @@ end
 function addon:GetFont(arg)
     local selectedFont = arg or self.db.profile.general.font or defaults.InitialDb.profile.general.font
 
-    local profileFont, font, chatFont, damageFont = addon.Shared:Fetch('font', selectedFont)
-
-    if self.db.profile.general.appliedToAll then font = profileFont end
-
-    return font
+    return addon.Shared:Fetch('font', selectedFont)
 end
 
 function addon:ApplyFontToAll()

@@ -1,0 +1,17 @@
+## Interface: 100206
+
+## Title: Extended UI
+## IconTexture: Interface/Addons/ExtendedUI/assets/logo_32x32
+## Notes: A minimal UI customisation addon.
+
+## Version: 0.0.1
+## Author: DocMad
+## SavedVariables: EUDB
+
+## X-Database: EUDB
+
+Core\Libs.xml
+
+ExtendedUI.lua
+
+Core\Load.xml

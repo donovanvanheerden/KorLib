@@ -5,7 +5,7 @@ local AceConfig = _G.LibStub("AceConfig-3.0")
 local AceConfigDialog = _G.LibStub("AceConfigDialog-3.0")
 local AceDbOptions = _G.LibStub("AceDBOptions-3.0")
 
-SLASH_Addon1 = "tmt"
+SLASH_Addon1 = "eui"
 SLASH_ReloadUI = "rl"
 
 function addon:RegisterEvents()

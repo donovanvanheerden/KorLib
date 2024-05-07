@@ -19,7 +19,7 @@ addon.db = {}
 
 addon.Shared = LibStub("LibSharedMedia-3.0")
 
-addon.Shared:Register("font", "Expressway", [[Interface\AddOns\TMT\Fonts\Expressway.ttf]])
+addon.Shared:Register("font", "Expressway", [[Interface\AddOns\]]..addonName..[[\Fonts\Expressway.ttf]])
 
 _G[addonName] = addonTable
 

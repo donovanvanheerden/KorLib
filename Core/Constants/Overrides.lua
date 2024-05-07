@@ -1,4 +1,5 @@
-local T = TMT
+local _, addonTable = ...
+local addon = addonTable.addon
 
 local powerColours = {
     MANA = {
@@ -8,8 +9,8 @@ local powerColours = {
     }
 }
 
-T._Defaults.PowerColours = powerColours
+addonTable._Defaults.PowerColours = powerColours
 
-function T:GetPowerOverride(power)
-    return T._Defaults.PowerColours[power]
+function addon:GetPowerOverride(power)
+    return addonTable._Defaults.PowerColours[power]
 end

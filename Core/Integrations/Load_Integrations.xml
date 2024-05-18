@@ -1,4 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui">
+    <Script file="GemDatabase.lua" />
     <Script file="BetterBags.lua" />
     <Script file="Registration.lua" />
 </Ui>

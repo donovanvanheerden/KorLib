@@ -14,6 +14,9 @@ local events = BetterBags:GetModule('Events')
 ---@class MoneyFrame: AceModule
 local money = BetterBags:GetModule('MoneyFrame')
 
+---@class Categories: AceModule
+local categories = BetterBags:GetModule("Categories")
+
 ---@param bag Bag
 local function onBagRendered(_, bag, arg3)
 	local font = addon:GetFont()
@@ -100,8 +103,27 @@ local function onBagRendered(_, bag, arg3)
     end
 end
 
+local function CategoriseGems()
+    for gemId in pairs(addonTable.gemData) do
+        for itemId in pairs(addonTable.gemData[gemId]) do
+
+            categories:AddItemToCategory(itemId, "MoP Remix: "..titleCase(gemId.." gems"))
+        end
+    end
+end
+
 function addon:BetterBags()
     events:RegisterMessage('bag/Rendered', onBagRendered)
 
+    CategoriseGems()
+
     print('BetterBags: '.. addonName .. ' integration enabled.')
+end
+
+function titleCase(value)
+    local function titleCaseWord(first, rest)
+        return first:upper()..rest:lower()
+    end
+
+    return string.gsub(value, "(%a)([%w_']*)", titleCaseWord)
 end

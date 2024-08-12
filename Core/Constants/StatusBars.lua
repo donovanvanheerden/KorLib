@@ -13,7 +13,7 @@ addonTable.unitFrames = {
 		alternatePowerBar = _G.PlayerFrameAlternateManaBar,
 		frame = _G.PlayerFrame,
 		frameTexture = _G.PlayerFrame.PlayerFrameContainer.FrameTexture,
-		healthBar =_G. PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarArea.HealthBar,
+		healthBar =_G. PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarsContainer.HealthBar,
 		powerBar = _G.PlayerFrameManaBar,
 	},
 	focus = {
@@ -24,7 +24,7 @@ addonTable.unitFrames = {
 	focusTarget = {},
 	target = {
 		frame = _G.TargetFrame,
-		healthBar = _G.TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar,
+		healthBar = _G.TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar,
 		reputationColour = _G.TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor,
 	},
 	targetOfTarget = {
@@ -34,10 +34,10 @@ addonTable.unitFrames = {
 }
 
 local statusBars = {
-	player = PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarArea.HealthBar,
-	target = TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar,
+	player = PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarsContainer.HealthBar,
+	target = TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar,
 	targetReputation = TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor,
-	focus = FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBar,
+	focus = FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar,
 	focusReputation = FocusFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor,
 	playertargettarget = TargetFrameToT.HealthBar,
 	alternateManaPower = PlayerFrameAlternateManaBar,

@@ -1,6 +1,8 @@
 local _, addonTable = ...
 local addon = addonTable.addon
 
+
+
 function addon:UpdateTarget()
 	local healthKey , nameKey, targetOfTarget = "target", "targetReputation", "playertargettarget"
 
@@ -41,6 +43,7 @@ function addon:ApplyStatusBarColor(unitFrame, enabled)
 	enabled = isTextureOption and true or enabled
 
 
+	if addonTable.StatusBars == nil then return end
 	if addonTable.StatusBars[unitFrame] == nil then return end
 
 	local target = string.gsub(unitFrame, "Reputation", "")

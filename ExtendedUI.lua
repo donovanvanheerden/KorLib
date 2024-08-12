@@ -49,7 +49,7 @@ function addon:OnInitialize()
 	AceConfig:RegisterOptionsTable(addon.name.."_Profiles", profiles)
 	AceConfigDialog:AddToBlizOptions(addon.name.."_Profiles", "Profiles", addon.name)
 
-    addon:ApplyFont()
+    -- addon:ApplyFont()
 
     addon:RegisterEvents()
     addon:RegisterCommands()

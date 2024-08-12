@@ -37,12 +37,12 @@ function addon:SlashCommand(input)
 end
 
 function addon:PLAYER_LOGIN()
-    self:ApplyFont()
+    -- self:ApplyFont()
     self:ApplyStatusBarColors()
 
-    self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
+    -- self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
 end
 
 function addon:ADDON_LOADED()
-    self:ApplyFont()
+    -- self:ApplyFont()
 end

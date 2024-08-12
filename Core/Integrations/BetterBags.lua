@@ -1,21 +1,7 @@
 local addonName, addonTable = ...
 local addon = addonTable.addon
 
----@class BetterBags: AceAddon
-local BetterBags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
-assert(BetterBags, "The Missing Tidbits requires BetterBags")
-
----@class BagFrame: AceModule
-local BagFrame = BetterBags:GetModule('BagFrame')
-
----@class Events: AceModule
-local events = BetterBags:GetModule('Events')
-
----@class MoneyFrame: AceModule
-local money = BetterBags:GetModule('MoneyFrame')
-
----@class Categories: AceModule
-local categories = BetterBags:GetModule("Categories")
+local betterBags = addon:NewModule("BetterBags")
 
 ---@param bag Bag
 local function onBagRendered(_, bag, arg3)
@@ -78,23 +64,27 @@ local function onBagRendered(_, bag, arg3)
             local info = C_CurrencyInfo.GetCurrencyListInfo(currencyIndex)
 
             local item = bag.currencyFrame:GetCurrencyItem(currencyIndex, info)
-            item.count:SetFont(font, 12)
 
-            local fn = item.frame:GetScript("OnMouseDown");
+            if item then
 
-            item.frame:SetScript('OnMouseDown', function()
-                fn()
+                item.count:SetFont(font, 12)
 
-                local info = C_CurrencyInfo.GetCurrencyListInfo(item.index)
+                local fn = item.frame:GetScript("OnMouseDown");
 
-                if (info.isShowInBackpack) then
-                    for _, item in pairs(bag.currencyFrame.iconGrid.cells) do
-                        item.count:SetFont(font, fontSize)
+                item.frame:SetScript('OnMouseDown', function()
+                    fn()
 
-                        width = width + item.count:GetStringWidth() + item.icon:GetWidth() + currencyPadding
+                    local info = C_CurrencyInfo.GetCurrencyListInfo(item.index)
+
+                    if (info.isShowInBackpack) then
+                        for _, item in pairs(bag.currencyFrame.iconGrid.cells) do
+                            item.count:SetFont(font, fontSize)
+
+                            width = width + item.count:GetStringWidth() + item.icon:GetWidth() + currencyPadding
+                        end
                     end
-                end
-            end)
+                end)
+            end
 
             currencyIndex = currencyIndex + 1
         until currencyIndex > C_CurrencyInfo.GetCurrencyListSize()
@@ -103,22 +93,13 @@ local function onBagRendered(_, bag, arg3)
     end
 end
 
-local function CategoriseGems()
-    for gemId in pairs(addonTable.gemData) do
-        for itemId in pairs(addonTable.gemData[gemId]) do
-
-            categories:AddItemToCategory(itemId, "MoP Remix: "..titleCase(gemId.." gems"))
-        end
-    end
-end
-
-function addon:BetterBags()
-    events:RegisterMessage('bag/Rendered', onBagRendered)
-
-    CategoriseGems()
-
-    print('BetterBags: '.. addonName .. ' integration enabled.')
-end
+-- local function CategoriseGems()
+--     for gemId in pairs(addonTable.timerunning.gems) do
+--         for itemId in pairs(addonTable.timerunning.gems[gemId]) do
+--             betterBags.categories:AddItemToCategory(itemId, "MoP Remix: "..titleCase(gemId.." gems"))
+--         end
+--     end
+-- end
 
 function titleCase(value)
     local function titleCaseWord(first, rest)
@@ -126,4 +107,23 @@ function titleCase(value)
     end
 
     return string.gsub(value, "(%a)([%w_']*)", titleCaseWord)
+end
+
+function betterBags:OnEnable()
+    if not BetterBags_ToggleBags then return end
+
+    local BetterBags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
+
+    local events = BetterBags:GetModule('Events')
+    local fonts = BetterBags:GetModule('Fonts')
+
+    -- overide fonts
+    fonts.UnitFrame12White:SetFont(addon:GetFont(), 12, "")
+    fonts.UnitFrame12Yellow:SetFont(addon:GetFont(), 12, "")
+
+    events:RegisterMessage('bag/Rendered', onBagRendered)
+
+    -- CategoriseGems()
+
+    addon:Print('BetterBags integration enabled.')
 end

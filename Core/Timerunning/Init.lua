@@ -1,5 +1,7 @@
 local _, addonTable = ...
 
+local gemManager = addonTable.addon:NewModule("GemManager")
+
 local GEM_DATA = {
     --[itemID] = {type, spellID, role, uiOrder}
     --role: bits 000 (Tank/Healer/DPS): Tank 100(4), DPS 001(1), H/D 011(3), H 010(2)
@@ -118,4 +120,102 @@ local GEM_DATA = {
     }
 };
 
-addonTable.gemData = GEM_DATA
+addonTable.timerunning = {
+    isTimerunner =PlayerGetTimerunningSeasonID() == 1,
+    -- gems = GEM_DATA
+}
+
+local GemFrame = {}
+
+function GemFrame:Show()
+  PlaySound(SOUNDKIT.GUILD_BANK_OPEN_BAG)
+  self.fadeIn:Play()
+end
+
+function GemFrame:Hide()
+  PlaySound(SOUNDKIT.GUILD_BANK_OPEN_BAG)
+  self.fadeOut:Play()
+end
+
+function GemFrame:IsShown()
+  return self.frame:IsShown()
+end
+
+--@param parent Frame
+--@return GemFrame
+function gemManager:Create(parent)
+  --@class GemFrame
+  local gemFrame = {}
+  setmetatable(gemFrame, {__index = GemFrame})
+  
+  gemFrame.loaded = false
+
+  local frame = CreateFrame("Frame", "ExtendedUIGemFrame", UIParent, "DefaultPanelTemplate")
+
+  local _,_,_, height = parent:GetBoundsRect()
+  
+  frame:Hide()
+  frame:SetParent(parent)
+  frame:SetPoint('BOTTOMLEFT', parent, 'BOTTOMRIGHT', 10, 0)
+  frame:SetPoint('TOPLEFT', parent, 'TOPRIGHT', 10, 0)
+  frame:SetSize(260, height)
+  frame:SetTitle("Gem Manager")
+
+  gemFrame.fadeIn, gemFrame.fadeOut = animations:AttachFadeAndSlideLeft(frame)
+  gemFrame.frame = frame
+
+  local content = grid:Create(gemFrame.frame)
+  content:GetContainer():SetPoint("TOPLEFT", gemFrame.frame, "TOPLEFT", const.OFFSETS.BAG_LEFT_INSET+4, const.OFFSETS.BAG_TOP_INSET)
+  content:GetContainer():SetPoint("BOTTOMRIGHT", gemFrame.frame, "BOTTOMRIGHT", const.OFFSETS.BAG_RIGHT_INSET, const.OFFSETS.BAG_BOTTOM_INSET)
+  content.maxCellWidth = 1
+  content.spacing = 0
+
+  gemFrame.content = content
+
+  --gemFrame.iconGrid = self:CreateIconGrid(parent)
+
+  return gemFrame
+end
+
+local _gm = nil
+
+local function onBagRendered()
+  for gemId in pairs(GEM_DATA) do
+    for itemId in pairs(GEM_DATA[gemId]) do
+       gemManager.bagCategories:AddItemToCategory(itemId, "MoP Remix: "..titleCase(gemId.." gems"))
+    end
+  end
+end
+
+function gemManager:OnEnable()
+  if not BetterBags_ToggleBags then return end
+
+  local BetterBags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
+
+  local events = BetterBags:GetModule('Events')
+
+  ---@class Animations: AceModule
+  gemManager.animations = BetterBags:GetModule('Animations')
+  ---@class Categories: AceModule
+  gemManager.bagCategories = BetterBags:GetModule("Categories")
+  ---@class Constants: AceModule
+  gemManager.const = BetterBags:GetModule('Constants')
+  ---@class GridFrame: AceModule
+  gemManager.grid = BetterBags:GetModule('Grid')
+
+  events:RegisterMessage('bag/Rendered', onBagRendered)
+  
+  addonTable.addon:Print("Timerunning gem categories enabled")
+end
+
+-- PaperDollFrame:HookScript("OnShow", function(self)
+--   if (_gm == nil) then
+--     _gm = gemManager:Create(PaperDollFrame)
+--   end
+
+--   _gm:Show()
+-- end)
+
+-- PaperDollFrame:HookScript("OnHide", function(self)
+--   _gm:Hide()
+-- end)

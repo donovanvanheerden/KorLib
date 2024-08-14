@@ -5,6 +5,15 @@ local defaults = addonTable._Defaults
 
 local text = addon:NewModule("Text");
 
+
+---@alias FontStyle
+---|""
+---|"NONE"
+---|"SHADOW"
+---|"OUTLINE"
+---|"THICK"
+---|"MONOCHROME"
+
 -- TODO, convert to module
 
 -- TODO, transform so that we get font defaults on the fonts object
@@ -212,40 +221,31 @@ local fonts = {
 -- russian: Fonts\ARIALN.TFF
 
 -- Sets the FontObject font, size and style
----@param obj FontInstance
+---@param obj Font
 ---@param font string
----@param size number
----@param style string @ NONE, OUTLINE, MONOCHROME, THICKOUTLINE, MONOCHROME|OUTLINE, MONOCHROME|THICKOUTLINE 
----@param sR number @ shadow red value
----@param sG number @ shadow green value
----@param sB number @ shadow blue value
----@param sA number @ shadow alpha value
----@param sX number @ shadow X offset
----@param sY number @ shadow Y offset
----@param r number @ text red value
----@param g number @ text green value
----@param b number @ text blue value
----@param a number @ text alpha value
+---@param size? number
+---@param style? TBFFlags
+---@param sR? number @sR shadow red value
+---@param sG? number @sG shadow green value
+---@param sB? number @sB shadow blue value
+---@param sA? number @sA shadow alpha value
+---@param sX? number @sX shadow X offset
+---@param sY? number @sY shadow Y offset
+---@param r? number @r text red value
+---@param g? number @g text green value
+---@param b? number @b text blue value
+---@param a? number @a text alpha value
 local function SetFont(obj, font, size, style, sR, sG, sB, sA, sX, sY, r, g, b, a)
     if not addon.db.profile.general.textEnabled then return end
 	if not obj then return end
 
-    if style == 'NONE' or not style then style = '' end
+    local hasShadow = sA and sA > 0 or false
 
-    local shadow = strsub(style, 0, 6) == 'SHADOW'
-	if shadow then style = strsub(style, 7) end -- shadow isnt a real style
-
-    local oldSize = select(2, obj:GetFont())
-    local oldStyle = select(3, obj:GetFont())
-    -- if (not size or size == nil) and not style then
-    --     size = select(2, obj:GetFont())
-    --     style = select(3, obj:GetFont())
-    --     addon:Print('size: ', size, 'style: ', style)
-    -- end
+    local _, oldSize, oldStyle = obj:GetFont();
 
 	obj:SetFont(font, size or oldSize, style or oldStyle)
-	obj:SetShadowColor(sR or 0, sG or 0, sB or 0, sA or (shadow and (style == '' and 1 or 0.6)) or 0)
-	obj:SetShadowOffset(sX or (shadow and 1) or 0, sY or (shadow and -1) or 0)
+	obj:SetShadowColor(sR or 0, sG or 0, sB or 0, sA or (style == '' and 1 or 0.6) or 0)
+	obj:SetShadowOffset(sX or (hasShadow and 1) or 0, sY or (hasShadow and -1) or 0)
 
 	if r and g and b then
 		obj:SetTextColor(r, g, b)
@@ -297,7 +297,7 @@ function addon:SetGeneralOption(info, value)
     elseif key == "font" and (self.db.profile.general.chatFont or self.db.profile.general.damageFont) then
         self:ApplyFont()
     elseif key == 'fontSize' then
-        self:FontSizeChanged(nil, nil, value)
+        self:OverrideChatFrames(nil, nil, value)
     end
 end
 
@@ -307,7 +307,7 @@ local function GetChatFont()
 
     local selectedFont, chatFont = addon.Shared:Fetch('font', addon.db.profile.general.font)
 
-    if self.db.profile.general.chatFont then chatFont = selectedFont else chatFont = _defaultFont end
+    if addon.db.profile.general.chatFont then chatFont = selectedFont else chatFont = _defaultFont end
 
     return chatFont;
 end
@@ -410,19 +410,19 @@ function addon:ApplyFont()
         SetFont(fonts.systemLargeNamePlate,         font, default,  "OUTLINE")
         SetFont(fonts.systemLargeNamePlateFixed,    font, default,  "OUTLINE")
 
-        SetFont(fonts.questSmall,       font, medium,   "NONE")
-        SetFont(fonts.quest,            font, medium,   "NONE")
-        SetFont(fonts.mailBody,         font, big,      "NONE")
-        SetFont(fonts.cooldown,         font, big,      "SHADOW")
-        SetFont(fonts.errorText,        font, big,      "SHADOW")
-        SetFont(fonts.questTitle,       font, big,      "NONE")
+        SetFont(fonts.questSmall,       font, medium,   "")
+        SetFont(fonts.quest,            font, medium,   "")
+        SetFont(fonts.mailBody,         font, big,      "")
+        SetFont(fonts.cooldown,         font, big,      "", 0, 0, 0, 1)
+        SetFont(fonts.errorText,        font, big,      "", 0, 0, 0, 1)
+        SetFont(fonts.questTitle,       font, big,      "")
         SetFont(fonts.pvpSubZone,       font, large,    "OUTLINE")
         SetFont(fonts.pvpZone,          font, large,    "OUTLINE")
         SetFont(fonts.worldSubZone,     font, huge,     "OUTLINE")
         SetFont(fonts.worldZone,        font, mega,     "OUTLINE")
 
-        SetFont(fonts.objective,        font, default,   "SHADOW")
-        SetFont(fonts.talkingText,      font, large,    "SHADOW")
+        SetFont(fonts.objective,        font, default,   "", 0, 0, 0, 1)
+        SetFont(fonts.talkingText,      font, large,    "", 0, 0, 0, 1)
         SetFont(fonts.talkingTitle,     font, enormous, "OUTLINE")
 
         -- override all fonts
@@ -433,82 +433,82 @@ function addon:ApplyFont()
         SetFont(fonts.number12,                     font, small)
         SetFont(fonts.number12_o1,                  font, default,  "OUTLINE")
         SetFont(fonts.numberOutlineThickMonoSmall,  font, default,  "OUTLINE")
-        SetFont(fonts.numberShadowSmall,            font, default,  "SHADOW")
+        SetFont(fonts.numberShadowSmall,            font, default,  "", 0, 0, 0, 1)
         SetFont(fonts.numberSmall,                  font, default)
         SetFont(fonts.numberNormalSmall,            font, default,  "OUTLINE")
         SetFont(fonts.number13,                     font, default)
-        SetFont(fonts.number13Gray,                 font, medium,   "SHADOW")
-        SetFont(fonts.number13White,                font, medium,   "SHADOW")
-        SetFont(fonts.number13Yellow,               font, medium,   "SHADOW")
-        SetFont(fonts.number14Gray,                 font, medium,   "SHADOW")
-        SetFont(fonts.number14White,                font, medium,   "SHADOW")
+        SetFont(fonts.number13Gray,                 font, medium,   "", 0, 0, 0, 1)
+        SetFont(fonts.number13White,                font, medium,   "", 0, 0, 0, 1)
+        SetFont(fonts.number13Yellow,               font, medium,   "", 0, 0, 0, 1)
+        SetFont(fonts.number14Gray,                 font, medium,   "", 0, 0, 0, 1)
+        SetFont(fonts.number14White,                font, medium,   "", 0, 0, 0, 1)
         SetFont(fonts.numberOutlineMed,             font, medium,   "OUTLINE")
-        SetFont(fonts.numberShadowMed,              font, medium,   "SHADOW")
+        SetFont(fonts.numberShadowMed,              font, medium,   "", 0, 0, 0, 1)
         SetFont(fonts.numberNormal,                 font, medium,   "OUTLINE")
         SetFont(fonts.number15,                     font, medium)
         SetFont(fonts.numberOutlineLarge,           font, big,      "OUTLINE")
         SetFont(fonts.number18,                     font, big)
-        SetFont(fonts.number18White,                font, big,      "SHADOW")
+        SetFont(fonts.number18White,                font, big,      "", 0, 0, 0, 1)
         SetFont(fonts.numberOutlineHuge,            font, enormous, "THICKOUTLINE")
 
         -- quest fonts
-        SetFont(fonts.questShadowSmall,             font,   medium, "SHADOW", 0.49, 0.35, 0.05, 1)
-        SetFont(fonts.questShadowHuge,              font,   large,  "SHADOW", 0.49, 0.35, 0.05, 1)
-        SetFont(fonts.questShadowSuperHuge,         font,   large,  "SHADOW", 0.49, 0.35, 0.05, 1)
-        SetFont(fonts.questShadowEnormous,          font,   mega,   "SHADOW", 0.49, 0.35, 0.05, 1)
+        SetFont(fonts.questShadowSmall,             font,   medium, "", 0.49, 0.35, 0.05, 1)
+        SetFont(fonts.questShadowHuge,              font,   large,  "", 0.49, 0.35, 0.05, 1)
+        SetFont(fonts.questShadowSuperHuge,         font,   large,  "", 0.49, 0.35, 0.05, 1)
+        SetFont(fonts.questShadowEnormous,          font,   mega,   "", 0.49, 0.35, 0.05, 1)
 
         -- game fonts
         SetFont(fonts.systemTiny,                   font, tiny)
         SetFont(fonts.achievementSmall,             font, small)
-        SetFont(fonts.friendsSmall,                 font, small, "SHADOW")
+        SetFont(fonts.friendsSmall,                 font, small, "", 0, 0, 0, 1)
         SetFont(fonts.game10_o1,                    font, small, "OUTLINE")
         SetFont(fonts.invoiceSmall,                 font, small)
-        SetFont(fonts.reputationDetail,             font, small, "SHADOW")
+        SetFont(fonts.reputationDetail,             font, small, "", 0, 0, 0, 1)
         SetFont(fonts.spellSmall,                   font, small)
         SetFont(fonts.subSpell,                     font, small)
         SetFont(fonts.systemOutlineSmall,           font, small, "OUTLINE")
-        SetFont(fonts.systemShadowSmall,            font, small, "SHADOW")
+        SetFont(fonts.systemShadowSmall,            font, small, "", 0, 0, 0, 1)
         SetFont(fonts.systemSmall,                  font, small)
         SetFont(fonts.tooltipSmall,                 font, small)
-        SetFont(fonts.friends_11,                   font, small, "SHADOW")
-        SetFont(fonts.friendsUser,                  font, small, "SHADOW")
-        SetFont(fonts.gameHighlightSmall2,          font, small, "SHADOW")
-        SetFont(fonts.gameNormalSmall2,             font, small, "SHADOW")
+        SetFont(fonts.friends_11,                   font, small, "", 0, 0, 0, 1)
+        SetFont(fonts.friendsUser,                  font, small, "", 0, 0, 0, 1)
+        SetFont(fonts.gameHighlightSmall2,          font, small, "", 0, 0, 0, 1)
+        SetFont(fonts.gameNormalSmall2,             font, small, "", 0, 0, 0, 1)
         SetFont(fonts.fancy12,                      font, default)
-        SetFont(fonts.friendsNormal,                font, default, "SHADOW")
+        SetFont(fonts.friendsNormal,                font, default, "", 0, 0, 0, 1)
         SetFont(fonts.game12,                       font, default)
         SetFont(fonts.invoiceMed,                   font, default)
         SetFont(fonts.systemMed1,                   font, default)
-        SetFont(fonts.systemShadowMed1,             font, default, "SHADOW")
+        SetFont(fonts.systemShadowMed1,             font, default, "", 0, 0, 0, 1)
         SetFont(fonts.tooltipMed,                   font, default)
-        SetFont(fonts.game13Shadow,                 font, medium, "SHADOW")
-        SetFont(fonts.gameNormalMed1,               font, medium, "SHADOW")
+        SetFont(fonts.game13Shadow,                 font, medium, "", 0, 0, 0, 1)
+        SetFont(fonts.gameNormalMed1,               font, medium, "", 0, 0, 0, 1)
         SetFont(fonts.systemMed2,                   font, medium)
         SetFont(fonts.systemOutline,                font, medium, "OUTLINE")
         SetFont(fonts.destinyMed,                   font, medium)
         SetFont(fonts.fancy14,                      font, medium)
-        SetFont(fonts.friendsLarge,                 font, medium, "SHADOW")
-        SetFont(fonts.gameHighlightMedium,          font, medium, "SHADOW")
-        SetFont(fonts.gameNormalMed2,               font, medium, "SHADOW")
-        SetFont(fonts.gameNormalMed3,               font, medium, "SHADOW")
+        SetFont(fonts.friendsLarge,                 font, medium, "", 0, 0, 0, 1)
+        SetFont(fonts.gameHighlightMedium,          font, medium, "", 0, 0, 0, 1)
+        SetFont(fonts.gameNormalMed2,               font, medium, "", 0, 0, 0, 1)
+        SetFont(fonts.gameNormalMed3,               font, medium, "", 0, 0, 0, 1)
         SetFont(fonts.gameTooltipHeader,            font, medium)
         SetFont(fonts.price,                        font, medium)
         SetFont(fonts.systemMed3,                   font, medium)
-        SetFont(fonts.systemShadowMed2,             font, medium, "SHADOW")
-        SetFont(fonts.systemShadowMed3,             font, medium, "SHADOW")
+        SetFont(fonts.systemShadowMed2,             font, medium, "", 0, 0, 0, 1)
+        SetFont(fonts.systemShadowMed3,             font, medium, "", 0, 0, 0, 1)
         SetFont(fonts.game15_o1,                    font, medium)
         SetFont(fonts.mailLarge,                    font, medium)
         SetFont(fonts.questLarge,                   font, medium)
         SetFont(fonts.game16,                       font, big)
-        SetFont(fonts.gameNormalLarge,              font, big, "SHADOW")
+        SetFont(fonts.gameNormalLarge,              font, big, "", 0, 0, 0, 1)
         SetFont(fonts.questLarger,                  font, big)
         SetFont(fonts.systemLarge,                  font, big)
-        SetFont(fonts.systemShadowLarge,            font, big, "SHADOW")
+        SetFont(fonts.systemShadowLarge,            font, big, "", 0, 0, 0, 1)
         SetFont(fonts.system16ShadowThickOutline,   font, big, "OUTLINE")
         SetFont(fonts.game18,                       font, big)
-        SetFont(fonts.gameNormalLarge2,             font, big, "SHADOW")
+        SetFont(fonts.gameNormalLarge2,             font, big, "", 0, 0, 0, 1)
         SetFont(fonts.questHuge,                    font, big)
-        SetFont(fonts.systemShadowLarge2,           font, big, "SHADOW")
+        SetFont(fonts.systemShadowLarge2,           font, big, "", 0, 0, 0, 1)
         SetFont(fonts.systemHuge1,                  font, large)
         SetFont(fonts.systemHuge1Outline,           font, large, "OUTLINE")
         SetFont(fonts.systemShadowHuge1,            font, large, "OUTLINE")
@@ -516,19 +516,19 @@ function addon:ApplyFont()
         SetFont(fonts.systemOutlineThickHuge2,      font, large, "THINKOUTLINE")
         SetFont(fonts.fancy24,                      font, huge)
         SetFont(fonts.game24,                       font, huge)
-        SetFont(fonts.gameHighlighHuge2,            font, huge, "SHADOW")
-        SetFont(fonts.gameNormalHuge2,              font, huge, "SHADOW")
+        SetFont(fonts.gameHighlighHuge2,            font, huge, "", 0, 0, 0, 1)
+        SetFont(fonts.gameNormalHuge2,              font, huge, "", 0, 0, 0, 1)
         SetFont(fonts.questSuperHuge,               font, huge)
         SetFont(fonts.systemHuge2,                  font, huge)
-        SetFont(fonts.bossEmoteNormalHuge,          font, mega, "SHADOW")
-        SetFont(fonts.systemShadowHuge3,            font, mega, "SHADOW")
+        SetFont(fonts.bossEmoteNormalHuge,          font, mega, "", 0, 0, 0, 1)
+        SetFont(fonts.systemShadowHuge3,            font, mega, "", 0, 0, 0, 1)
         SetFont(fonts.subZoneText,                  font, mega, "OUTLINE")
-        SetFont(fonts.systemShadowHuge4,            font, mega, "SHADOW")
+        SetFont(fonts.systemShadowHuge4,            font, mega, "", 0, 0, 0, 1)
         SetFont(fonts.game30,                       font, enormous)
         SetFont(fonts.questEnormous,                font, enormous)
         SetFont(fonts.coreAbility,                  font, enormous)
         SetFont(fonts.destinyHuge,                  font, enormous)
-        SetFont(fonts.gameGigantic,                 font, enormous, "SHADOW")
+        SetFont(fonts.gameGigantic,                 font, enormous, "", 0, 0, 0, 1)
         SetFont(fonts.systemOutlineThickWTF,        font, enormous, "OUTLINE")
 
         -- big fonts
@@ -537,7 +537,7 @@ function addon:ApplyFont()
         SetFont(fonts.game42,                       font, gigantic)
         SetFont(fonts.game46,                       font, massive)
         SetFont(fonts.game48,                       font, massive)
-        SetFont(fonts.game48Shadow,                 font, massive, "SHADOW")
+        SetFont(fonts.game48Shadow,                 font, massive, "", 0, 0, 0, 1)
         SetFont(fonts.game60,                       font, colossal)
         SetFont(fonts.game72,                       font, monstrous)
         SetFont(fonts.game120,                      font, titanic)
@@ -583,12 +583,22 @@ function addon:ApplyFont()
         SetFont(fonts.systemWTF2,                    font)
         SetFont(fonts.systemOutlineWTF2,             font)
         SetFont(fonts.systemIME,                     font)
+
+        -- objective tracker
+
+        SetFont(ObjectiveTrackerLineFont, font, default, "", 0, 0, 0, 1)
+        SetFont(ObjectiveTrackerHeaderFont, font, big)
+        SetFont(GameFontHighlight, font)
+
+        -- for fontSize in 12,22 do
+        --     SetFont("ObjectiveTrackerFont"..fontSize, font)
+        -- end
+        
     end
 
     -- override chat frames
     local _, oldSize = ChatFrame1:GetFont()
     _G.FCF_SetChatWindowFontSize(nil, _G.ChatFrame1, oldSize);
-
 end
 
 -- Overrides the chat frames to the selected font override
@@ -602,9 +612,7 @@ function addon:OverrideChatFrames(dropDown, chatFrame, fontSize)
     local font = GetChatFont()
 
     for id, frameName in pairs(_G.CHAT_FRAMES) do
-        local frame = _G[frameName];
-
-        addon:SetFont(_G["ChatFrame" .. i], font, fontSize)
+        SetFont(_G[frameName], font, fontSize)
         _G.SetChatWindowSize(id, fontSize)
     end
 

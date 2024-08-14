@@ -1,6 +1,14 @@
 local _, addonTable = ...
 local addon = addonTable.addon
 
+DEVTOOLS_MAX_ENTRY_CUTOFF = 100;    -- Maximum table entries shown
+DEVTOOLS_LONG_STRING_CUTOFF = 200;  -- Maximum string size shown
+DEVTOOLS_DEPTH_CUTOFF = 10;         -- Maximum table depth
+DEVTOOLS_USE_TABLE_CACHE = true;    -- Look up table names
+DEVTOOLS_USE_FUNCTION_CACHE = true; -- Look up function names
+DEVTOOLS_USE_USERDATA_CACHE = true; -- Look up userdata names
+DEVTOOLS_INDENT='  ';               -- Indentation string
+
 function addon:Log(...)
     if (self.db == nil or not self.db.debug) then return end
 

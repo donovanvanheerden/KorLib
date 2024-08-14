@@ -143,7 +143,7 @@ local unitFrames = {
                     set = "SetCharacterPanelOption",
                     order = 1
                 },
-                divider1 = Divider(_, 2),
+                divider1 = Divider(nil, 2),
                 font = FontSelect("GetCharacterPanelOption", "SetCharacterPanelOption", nil, 3),
                 -- font = {
                 --     type = "select",
@@ -168,7 +168,7 @@ local unitFrames = {
                     step = 1,
                     disabled = "CharacterPanelDisabled"
                 },
-                divider2 = Divider(_, 6),
+                divider2 = Divider(nil, 6),
                 anchor = {
                     type = "select",
                     name = "Anchor",
@@ -188,7 +188,7 @@ local unitFrames = {
                     order = 7,
                     disabled = "CharacterPanelDisabled"
                 },
-                divider3 = Divider(_, 8),
+                divider3 = Divider(nil, 8),
                 anchorX = {
                     type = "range",
                     name = "X Offset",

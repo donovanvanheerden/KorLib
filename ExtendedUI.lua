@@ -10,8 +10,8 @@ addonTable.addon = AceAddon:NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0"
 local addon = addonTable.addon
 
 addon.name = addonName;
-addon.version = GetAddOnMetadata(addonName, 'Version')
-addon.dbName = GetAddOnMetadata(addonName, 'X-Database')
+addon.version = C_AddOns.GetAddOnMetadata(addonName, 'Version')
+addon.dbName = C_AddOns.GetAddOnMetadata(addonName, 'X-Database')
 addon.wowpatch, addon.wowbuild, addon.wowdate, addon.wowtoc = GetBuildInfo()
 addon.locale = GetLocale()
 addonTable._Defaults = {}

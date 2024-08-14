@@ -1,4 +1,4 @@
-## Interface: 100207,110000
+## Interface: 110002
 
 ## Title: Extended UI
 ## IconTexture: Interface/Addons/ExtendedUI/assets/logo_32x32

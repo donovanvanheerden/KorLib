@@ -118,6 +118,55 @@ local general = {
             min = 8,
             max = 24,
             step = 1,
+        },
+        header02 = {
+            type = "header",
+            name = "Other",
+            order = 12,
+        },
+        uiScale = {
+            type = "range",
+            name = "UI Scale",
+            desc = "Set size for ilevel on character panel",
+            get = "GetGeneralOption",
+            set = "SetGeneralOption",
+            order = 13,
+            min = 0.5,
+            max = 1,
+            step = 0.01
+        },
+        separator03 = {
+            type = "description",
+            name = " ",
+            order = 14,
+            width = 0.1,
+        },
+        applyScale = {
+            type = "execute",
+            name = "Apply Scale",
+            desc = "Applies the UI scale",
+            func = function()
+                addon:ApplyScale(addon.db.profile.general.uiScale)
+            end,
+            order = 15
+        },
+        separator04 = {
+            type = "description",
+            name = " ",
+            order = 16,
+            width = 1.1,
+        },
+        autoScale = {
+            type = "execute",
+            name = "Auto Scale",
+            desc = "Automatically chooses scale based on monitor size",
+            func = function()
+                local screenHeight = select(2, GetPhysicalScreenSize())
+                local newScale = 768 / screenHeight
+                addon:ApplyScale(newScale)
+                addon.db.profile.general.uiScale = newScale
+            end,
+            order = 17,
         }
     }
 }

@@ -4,7 +4,8 @@ local defaultDb = {
     profile = {
         general = {
             font = "Expressway",
-            fontSize = 12
+            fontSize = 12,
+			uiScale = 1,
         },
         unitFrames = {
 			player = false,

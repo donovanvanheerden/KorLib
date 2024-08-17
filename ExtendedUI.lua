@@ -31,6 +31,7 @@ function addon:OnEnable()
         addon:Print("debug mode enabled")
     end
 
+    addon:ApplyScale(tonumber(GetCVar('uiScale')))
     -- Register Addon Integrations
 	addon:RegisterIntegrations()
 end
@@ -57,4 +58,16 @@ end
 
 function addon:OnDisable()
     print('E - OnDisable')
+end
+
+
+
+---@param scale number
+function addon:ApplyScale(scale)
+    if (type(scale) ~= "number") then return end
+    if (scale > 1) then scale = 1 end
+    if (scale < 0.5) then scale = 0.5 end
+
+    SetCVar("uiScale", scale);
+    UIParent:SetScale(scale);
 end

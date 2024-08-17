@@ -10,9 +10,8 @@ A minor UI customisation addon, for customising the World of Warcraft interface
 - [x] Changing font only for health/damage numbers
 - [x] Changing font only for chat frame
 - [x] Changing font size for chat (more options, 8 - 24)
-- [ ] Changing font size for item stack count in bags
 - [ ] Bag sorting in reverse (top-down)
 - [ ] Bag sorting using last bag slot instead of first bag slot
-- [ ] Bag sorting blacklist for ignoring when sorting
-- [ ] Adjusting UI scaling (less than blizzard default)
+- [ ] Bag sorting ignore list for ignoring items when sorting
+- [x] Adjusting UI scaling (less than blizzard default)
 - [ ] Custom format for health / power numbers on unit frames (1M, 20k, etc...)

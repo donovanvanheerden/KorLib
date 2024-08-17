@@ -1,6 +1,6 @@
-# TMT: The Missing Tidbits
+# Extended UI
 
-A minor UI customisation addon, for options that should be baked in.
+A minor UI customisation addon, for customising the World of Warcraft interface
 
 
 ## Features

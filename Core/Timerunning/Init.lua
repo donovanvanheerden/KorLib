@@ -188,6 +188,9 @@ local function onBagRendered()
 end
 
 function gemManager:OnEnable()
+  -- skip enabling
+  if true then return end
+
   if not BetterBags_ToggleBags then return end
 
   local BetterBags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")

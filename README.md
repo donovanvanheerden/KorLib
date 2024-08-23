@@ -15,3 +15,7 @@ A minor UI customisation addon, for customising the World of Warcraft interface
 - [ ] Bag sorting ignore list for ignoring items when sorting
 - [x] Adjusting UI scaling (less than blizzard default)
 - [ ] Custom format for health / power numbers on unit frames (1M, 20k, etc...)
+
+## CombatText (damage numbers)
+
+- [ ] Add option change font size

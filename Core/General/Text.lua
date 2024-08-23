@@ -342,8 +342,8 @@ function addon:ApplyFont()
     -- instead of always assigning...
 
     if self.db.profile.general.damageFont then
-        fonts.damage = damageFont;
-        fonts.combat = damageFont;
+        SetFont(fonts.combat, damageFont);
+        DAMAGE_TEXT_FONT   = damageFont
     end
 
 

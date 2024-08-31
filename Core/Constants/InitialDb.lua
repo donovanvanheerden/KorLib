@@ -9,6 +9,7 @@ local defaultDb = {
         },
         unitFrames = {
 			player = false,
+			playerHitIndicator = true,
 			target = false,
 			targetReputation = false, -- none, class, unit
 			focus = false,
@@ -26,8 +27,14 @@ local defaultDb = {
 				font = "Expressway",
 				fontSize = 10
 			}
-        }
-    }
+        },
+    },
+	-- unitFrames = {
+	-- 	player = {
+	-- 		classColour = false,
+	-- 		hitIndicator = true,
+	-- 	}
+	-- }
 }
 
 addonTable._Defaults.InitialDb = defaultDb

@@ -183,12 +183,19 @@ local fonts = {
     questSuperHugeOutline                   = _G.QuestFont_Super_Huge_Outline,
     splashHeader                            = _G.SplashHeaderFont,
     game11                                  = _G.Game11Font,
+    game11Shadow                            = _G.Game11Font_Shadow,
     game13                                  = _G.Game13Font,
+    game13Shadow                            = _G.Game13Font_Shadow,
     game15                                  = _G.Game15Font,
+    game15Shadow                            = _G.Game15Font_Shadow,
     game20                                  = _G.Game20Font,
+    game20Shadow                            = _G.Game20Font_Shadow,
     game27                                  = _G.Game27Font,
+    game27Shadow                            = _G.Game27Font_Shadow,
     game32                                  = _G.Game32Font,
+    game32Shadow                            = _G.Game32Font_Shadow,
     game36                                  = _G.Game36Font,
+    game36Shadow                            = _G.Game36Font_Shadow,
     game11_o1                               = _G.Game11Font_o1,
     game12_o1                               = _G.Game12Font_o1,
     game13_o1                               = _G.Game13Font_o1,
@@ -554,12 +561,19 @@ function addon:ApplyFont()
         SetFont(fonts.questSuperHugeOutline,         font)
         SetFont(fonts.splashHeader,                  font)
         SetFont(fonts.game11,                        font)
+        SetFont(fonts.game11Shadow,                  font, small, nil, 0, 0, 0, 1)
         SetFont(fonts.game13,                        font)
+        SetFont(fonts.game13Shadow,                  font, medium, nil, 0, 0, 0, 1)
         SetFont(fonts.game15,                        font)
+        SetFont(fonts.game15Shadow,                  font, big, nil, 0, 0, 0, 1)
         SetFont(fonts.game20,                        font)
+        SetFont(fonts.game20Shadow,                  font, mega, nil, 0, 0, 0, 1)
         SetFont(fonts.game27,                        font)
+        SetFont(fonts.game27Shadow,                  font, gigantic, nil, 0, 0, 0, 1)
         SetFont(fonts.game32,                        font)
+        SetFont(fonts.game32Shadow,                  font, massive, nil, 0, 0, 0, 1)
         SetFont(fonts.game36,                        font)
+        SetFont(fonts.game36Shadow,                  font, colossal, nil, 0, 0, 0, 1)
         SetFont(fonts.game11_o1,                     font)
         SetFont(fonts.game12_o1,                     font)
         SetFont(fonts.game13_o1,                     font)
@@ -636,7 +650,6 @@ function text:OnEnable()
         -- for x, y in pairs(b) do
         --     addon:Print('text: ', x, y)
         -- end
-        
         -- addon:SetFont(WorldMapFrameHomeButton.text, addon:GetFont())
     -- end
 end

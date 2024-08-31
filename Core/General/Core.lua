@@ -39,6 +39,7 @@ end
 function addon:PLAYER_LOGIN()
     -- self:ApplyFont()
     self:ApplyStatusBarColors()
+	self:ToggleHitIndicator()
 
     -- self:SecureHook("FCF_SetChatWindowFontSize", "FontSizeChanged")
 end

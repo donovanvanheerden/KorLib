@@ -264,43 +264,70 @@ local unitFrames = {
                 }
             }
         },
-        heading0 = {
+        header01 = {
             type = "header",
-            name = "Health Class Colors",
-            order = 0
+            name = "Player",
+            order = 0,
         },
         [addonTable.units.player] = {
             type = "toggle",
-            name = "Player",
+            name = "Class Color",
             desc = "Enables class colors on health bar",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
             order = 1
         },
-        [addonTable.units.target] = {
+        playerHitIndicator = {
             type = "toggle",
-            name = "Target",
-            desc = "Enables class / unit colors on health bar",
+            name = "Player Hit Indicator",
+            desc = "Show or Hide the hit indicator, this usually shows damage done to you or healing done to you.",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
             order = 2
         },
-        [addonTable.units.targetOfTarget] = {
+        separator01 = Divider(1, 4),
+        separator02 = Divider(1, 5),
+        separator03 = Divider(1, 6),
+        header02 = {
+            type = "header",
+            name = "Target",
+            order = 7,
+        },
+        [addonTable.units.target] = {
             type = "toggle",
-            name = "Target of Target",
+            name = "Class Color",
             desc = "Enables class / unit colors on health bar",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
-            order = 5
+            order = 8
+        },
+        header03 = {
+            type = "header",
+            name = "Target of Target",
+            order = 9,
+        },
+        [addonTable.units.targetOfTarget] = {
+            type = "toggle",
+            name = "Class Color",
+            desc = "Enables class / unit colors on health bar",
+            get = "GetUnitFrameOption",
+            set = "SetUnitFrameOption",
+            order = 10
+        },
+        header04 = {
+            type = "header",
+            name = "Focus",
+            order = 11,
         },
         [addonTable.units.focus] = {
             type = "toggle",
-            name = "Focus",
+            name = "Class Color",
             desc = "Enables class / unit colors on health bar",
             get = "GetUnitFrameOption",
             set = "SetUnitFrameOption",
-            order = 4
+            order = 12
         },
+
     }
 }
 

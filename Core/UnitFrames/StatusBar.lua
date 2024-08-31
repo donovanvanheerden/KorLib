@@ -29,7 +29,25 @@ function addon:SetUnitFrameOption(info, value)
 
 	self.db.profile.unitFrames[key] = value
 
-	self:ApplyStatusBarColor(key, value)
+	if key == "playerHitIndicator" then
+    self:ToggleHitIndicator()
+	else
+		self:ApplyStatusBarColor(key, value)
+	end
+end
+
+function addon:ToggleHitIndicator()
+  -- TODO: abstract out
+  local hitIndicator = PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator
+
+	if self.db.profile.unitFrames.playerHitIndicator ~= true then
+		-- hides player indicator text
+		hitIndicator:Hide()
+		hooksecurefunc(PetHitIndicator, "Show", PetHitIndicator.Hide)
+  else
+    hitIndicator:Show()
+    hooksecurefunc(PetHitIndicator, "Show", PetHitIndicator.Show)
+	end
 end
 
 --- Applies class color or unit color to selected status bar / unit frame element
@@ -38,7 +56,7 @@ end
 function addon:ApplyStatusBarColor(unitFrame, enabled)
     self:Log('Frame: ' .. unitFrame .. ' ' .. tostring(enabled))
 
-    local isTextureOption = unitFrame == "power" or unitFrame == "health" or "unitFrame" == "alternatePower"
+    local isTextureOption = unitFrame == "power" or unitFrame == "health" or unitFrame == "alternatePower"
 
 	enabled = isTextureOption and true or enabled
 
